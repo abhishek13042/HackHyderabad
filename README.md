@@ -14,7 +14,9 @@ Built on [Hindsight](https://github.com/vectorize-io/hindsight) agent memory.
 ## Quickstart (about a minute, once installed)
 
 With the environments from [Development setup](#development-setup-windows-powershell)
-and your keys in `.env`, start three terminals from the repo root:
+and your keys in `.env`, start three terminals from the repo root. With Hindsight
+Cloud (`HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io` and `HINDSIGHT_API_KEY`
+in `.env`), skip the first one:
 
 ```powershell
 .venv-hindsight\Scripts\hindsight-api                      # 1. memory on :8888

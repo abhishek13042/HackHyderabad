@@ -311,9 +311,26 @@ def _memory_lines(ctx: AgentContext) -> list[str]:
     if not ctx.memories:
         return ["MEMORIES: none available."]
     return ["MEMORIES (cite by id):"] + [
-        f"[{alias}] {' '.join(memory.text.split())}"
+        f"[{alias}] {_provenance(memory, ctx.client)}{' '.join(memory.text.split())}"
         for alias, memory in aliases(ctx.memories).items()
     ]
+
+
+def _provenance(memory: MemoryRecord, client: Client) -> str:
+    """`(another client C01 · March 2026) `: where a memory came from, from its metadata.
+
+    Hindsight rewrites retained text into extracted facts, which often drop the client's
+    name, so without this the model can't tell another client's history from this one's.
+    """
+    client_id, period = memory.metadata.get("client_id"), memory.metadata.get("period")
+    parts = []
+    if client_id:
+        parts.append(
+            "this client" if client_id == client.client_id else f"another client {client_id}"
+        )
+    if period:
+        parts.append(label(period))
+    return f"({' · '.join(parts)}) " if parts else ""
 
 
 # --- Parsing -----------------------------------------------------------------

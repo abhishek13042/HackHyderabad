@@ -148,7 +148,7 @@ MEMORIES (cite by id):
 | Setting | Value |
 |---|---|
 | Provider | Groq (OpenAI-compatible API) |
-| Model | `openai/gpt-oss-120b`; fallback `qwen/qwen3-32b` |
+| Model | `openai/gpt-oss-120b`; fallback `openai/gpt-oss-20b` |
 | Mode | JSON mode (`response_format={"type": "json_object"}`) — **no tool calling** (fragile on Groq, per problem statement) |
 | Temperature | 0.1 |
 | Timeout | 30 s |

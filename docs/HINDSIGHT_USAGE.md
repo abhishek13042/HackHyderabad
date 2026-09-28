@@ -137,6 +137,11 @@ The question (`memory_text.group_query`):
 - The memories go to the model as `M1`, `M2`, … (D22). It must cite the ones it
   used, and guardrails G2, G3 and G5 check the citations. In the UI every card shows
   the memories it cited, with the client and month each came from.
+- Each memory line starts with where it came from, taken from its metadata:
+  `[M1] (another client C01 · March 2026) …` (D51). Hindsight rewrites what we
+  retain into extracted facts, and those often drop the client's name; without the
+  tag the model can't tell another client's history from this one's, and the
+  cross-client warning never fires.
 
 ## 4. Reflect: for people, not for the pipeline
 
@@ -182,6 +187,7 @@ also call `GET /api/memory/recall?q=…` to ask the bank directly.
 
 Self-hosted, in its own virtual environment because of its heavy dependencies
 (D14). The client is pinned to the same version as the server (`0.10.1`). For
-Hindsight Cloud, set `HINDSIGHT_BASE_URL` and `HINDSIGHT_API_KEY` in `.env`; no
-code changes. `InMemoryBackend` is a keyword-matching stand-in, so the tests and
+Hindsight Cloud, set `HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io` and
+`HINDSIGHT_API_KEY` in `.env`; no code changes, and no local server or model key.
+The live tests (`pytest -m hindsight`) pass against both. `InMemoryBackend` is a keyword-matching stand-in, so the tests and
 offline work need no server. It is not a substitute for real recall quality.

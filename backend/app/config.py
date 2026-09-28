@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     groq_api_key: SecretStr = SecretStr("")
     groq_model: str = "openai/gpt-oss-120b"
-    groq_fallback_model: str = "qwen/qwen3-32b"
+    groq_fallback_model: str = "openai/gpt-oss-20b"
 
     hindsight_base_url: str = "http://localhost:8888"
     hindsight_api_key: SecretStr = SecretStr("")

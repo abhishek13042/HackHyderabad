@@ -20,6 +20,9 @@ TEMPERATURE = 0.1
 TIMEOUT_SECONDS = 30.0
 BACKOFF_SECONDS = (1.0, 2.0, 4.0)
 """Waits between attempts on one model before moving to the next (429 / 5xx / network)."""
+MAX_RETRY_AFTER_SECONDS = 20.0
+"""Cap on a 429's `retry-after`. Groq's free tier limits tokens per minute, and its
+window resets within a minute; a longer wait moves on to the next model instead."""
 
 
 @dataclass(frozen=True)
@@ -84,6 +87,8 @@ class GroqChat:
                 try:
                     return self._call(model, messages)
                 except openai.APIStatusError as exc:
+                    if wait is not None and (asked := _retry_after(exc)) is not None:
+                        wait = max(wait, min(asked, MAX_RETRY_AFTER_SECONDS))
                     if (generation := _failed_generation(exc)) is not None:
                         # Groq rejected the model's own output as invalid JSON. That is
                         # bad output, not an outage: hand it back for the agent to retry.
@@ -125,6 +130,16 @@ def _param(message: Message) -> ChatCompletionMessageParam:
             return {"role": "user", "content": message.content}
         case "assistant":
             return {"role": "assistant", "content": message.content}
+
+
+def _retry_after(exc: openai.APIStatusError) -> float | None:
+    """Seconds a 429 asks us to wait (`retry-after` header), if it says."""
+    if exc.status_code != 429:
+        return None
+    try:
+        return max(0.0, float(exc.response.headers.get("retry-after", "")))
+    except ValueError:
+        return None
 
 
 def _transient(status: int) -> bool:

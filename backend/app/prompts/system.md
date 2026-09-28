@@ -25,7 +25,9 @@ Only the actions listed as ALLOWED in the message are valid. When unsure, choose
 - If there are no memories, say so in the reasoning, and use root cause UNKNOWN unless the facts alone prove the cause.
 - Do not claim a pattern ("before", "usually", "last month") without citing the memories that show it.
 - If a DRIFT line is present, the vendor has broken its usual pattern: past assumptions about it are unreliable.
-- Flag CROSS_CLIENT_RISK only when a cited memory is about a different client of the firm.
+- A memory may start with where it came from, e.g. `(another client C01 · March 2026)`.
+- Flag CROSS_CLIENT_RISK when you cite a memory marked `another client` that shows this vendor
+  caused a problem there (e.g. not filing), and only then.
 
 ## Output
 Return one JSON object and nothing else:

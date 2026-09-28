@@ -127,7 +127,7 @@ backend/tests/
 ```
 GROQ_API_KEY=
 GROQ_MODEL=openai/gpt-oss-120b
-GROQ_FALLBACK_MODEL=qwen/qwen3-32b
+GROQ_FALLBACK_MODEL=openai/gpt-oss-20b
 HINDSIGHT_BASE_URL=http://localhost:8888
 HINDSIGHT_API_KEY=            # empty for self-hosted
 HINDSIGHT_BANK_ID=munshi-rao-associates

@@ -11,6 +11,7 @@ import pytest
 
 from backend.app.llm import (
     BACKOFF_SECONDS,
+    MAX_RETRY_AFTER_SECONDS,
     TEMPERATURE,
     GroqChat,
     LLMUnavailableError,
@@ -21,8 +22,10 @@ REQUEST = httpx2.Request("POST", "https://api.groq.com/openai/v1/chat/completion
 MESSAGES = [Message("system", "rules"), Message("user", "facts")]
 
 
-def status_error(status: int, body: object = None) -> openai.APIStatusError:
-    response = httpx2.Response(status, request=REQUEST)
+def status_error(
+    status: int, body: object = None, headers: dict[str, str] | None = None
+) -> openai.APIStatusError:
+    response = httpx2.Response(status, request=REQUEST, headers=headers)
     return openai.APIStatusError(f"HTTP {status}", response=response, body=body)
 
 
@@ -76,6 +79,23 @@ def test_rate_limit_backs_off_then_succeeds() -> None:
     groq, _, waits = chat(status_error(429), status_error(503), reply())
     assert groq.complete(MESSAGES).model == "primary"
     assert waits == [1.0, 2.0]
+
+
+def test_rate_limit_honours_retry_after_up_to_a_cap() -> None:
+    groq, _, waits = chat(
+        status_error(429, headers={"retry-after": "7"}),
+        status_error(429, headers={"retry-after": "600"}),
+        status_error(429, headers={"retry-after": "soon"}),
+        reply(),
+    )
+    assert groq.complete(MESSAGES).model == "primary"
+    assert waits == [7.0, MAX_RETRY_AFTER_SECONDS, 4.0]
+
+
+def test_retry_after_is_ignored_on_server_errors() -> None:
+    groq, _, waits = chat(status_error(503, headers={"retry-after": "9"}), reply())
+    assert groq.complete(MESSAGES).model == "primary"
+    assert waits == [1.0]
 
 
 def test_falls_back_after_backoff_is_exhausted() -> None:

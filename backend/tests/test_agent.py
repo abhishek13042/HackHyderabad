@@ -309,8 +309,16 @@ def test_user_message_has_the_facts() -> None:
     assert "ALLOWED: CHASE_VENDOR, DEFER, ESCALATE, HOLD_PAYMENT" in text
     assert "TRUST: level 0 OBSERVE · 1 correct, 1 wrong" in text
     assert "DRIFT: none detected" in text
-    assert "[M1] March 2026: At client Sri Balaji Textiles" in text
-    assert "\n[M2] February 2026" in text
+    assert "[M1] (this client) March 2026: At client Sri Balaji Textiles" in text
+    assert "\n[M2] February 2026" in text  # no metadata, no tag
+
+
+def test_memories_say_which_client_they_came_from() -> None:
+    other = KRISHNA_AT_C01.model_copy(
+        update={"metadata": {"client_id": "C03", "period": "2026-03"}}
+    )
+    text = user_message(group(), context(memories=(other,)))
+    assert "[M1] (another client C03 · March 2026) March 2026: At client" in text
 
 
 def test_ac_05_7_memory_off_prompt_has_no_memory() -> None:
