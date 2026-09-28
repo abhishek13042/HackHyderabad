@@ -8,6 +8,7 @@ import { Skeleton } from "./components/ui";
 import type { Route } from "./lib/route";
 import { useWorkspace } from "./lib/workspace";
 import { DataScreen } from "./screens/DataScreen";
+import { Home } from "./screens/Home";
 import { VendorProfile } from "./screens/VendorProfile";
 import { Workbench } from "./screens/Workbench";
 
@@ -15,6 +16,7 @@ import { Workbench } from "./screens/Workbench";
 const Insights = lazy(() => import("./screens/Insights").then((m) => ({ default: m.Insights })));
 
 const NAV: { name: Route["name"]; label: string; href: string }[] = [
+  { name: "home", label: "Start here", href: "#/home" },
   { name: "workbench", label: "Workbench", href: "#/workbench" },
   { name: "insights", label: "Insights", href: "#/insights" },
   { name: "data", label: "Data", href: "#/data" },
@@ -22,6 +24,8 @@ const NAV: { name: Route["name"]; label: string; href: string }[] = [
 
 function Screen({ route }: { route: Route }) {
   switch (route.name) {
+    case "home":
+      return <Home />;
     case "vendor":
       return <VendorProfile key={route.gstin} gstin={route.gstin} />;
     case "insights":

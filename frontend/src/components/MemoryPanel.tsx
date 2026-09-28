@@ -20,11 +20,12 @@ interface Look {
 }
 
 export function eventLook(event: MemoryEvent): Look {
-  if (event.op === "recall") return { icon: "↓", label: "recall", tone: "text-sky-700" };
-  if (event.op === "reflect") return { icon: "✦", label: "reflect", tone: "text-violet-700" };
-  if (event.kind === "outcome") return { icon: "✓", label: "outcome", tone: "text-emerald-700" };
-  if (event.kind === "drift") return { icon: "⚠", label: "drift", tone: "text-red-700" };
-  return { icon: "↑", label: "retain", tone: "text-accent-700" };
+  if (event.op === "recall") return { icon: "↓", label: "Looked up past cases", tone: "text-sky-700" };
+  if (event.op === "reflect") return { icon: "✦", label: "Summarised what it knows", tone: "text-violet-700" };
+  if (event.kind === "outcome") return { icon: "✓", label: "Checked last month's advice", tone: "text-emerald-700" };
+  if (event.kind === "drift") return { icon: "⚠", label: "Noticed a vendor changed", tone: "text-red-700" };
+  if (event.kind === "resolution") return { icon: "↑", label: "Saved a decision", tone: "text-accent-700" };
+  return { icon: "↑", label: "Saved a lesson", tone: "text-accent-700" };
 }
 
 export function MemoryPanel() {
@@ -65,7 +66,7 @@ export function MemoryPanel() {
     <aside aria-label="Memory activity" className="flex h-full flex-col border-l border-stone-200 bg-white">
       <header className="flex items-center justify-between border-b border-stone-100 px-3 py-2.5">
         <h2 className="text-sm font-semibold text-stone-700">
-          Memory activity
+          Munshi's memory, live
           {busy && <span className="ml-2 inline-block h-2 w-2 animate-pulse rounded-full bg-accent-600" aria-label="live" />}
         </h2>
         <button
@@ -77,6 +78,12 @@ export function MemoryPanel() {
           {collapsed ? "Show" : "Hide"}
         </button>
       </header>
+      {!collapsed && (
+        <p className="border-b border-stone-100 bg-stone-50 px-3 py-2 text-xs text-stone-500">
+          Every time Munshi looks up a vendor's history or learns from a decision, it shows here. Stored in
+          Hindsight, so it lasts from month to month.
+        </p>
+      )}
       {!collapsed && (
         <ol className="flex-1 divide-y divide-stone-100 overflow-y-auto text-xs" aria-live="polite">
           {newest.length === 0 && (
@@ -98,11 +105,9 @@ export function MemoryPanel() {
                   <div className="flex items-center justify-between gap-2">
                     <span className={`font-medium ${look.tone}`}>
                       <span aria-hidden="true">{look.icon}</span> {look.label}
-                      {event.op === "retain" && event.kind === "resolution" && " · decision"}
                     </span>
                     <span className="num text-stone-400">
-                      {event.result_count !== null && event.op === "recall" && `${event.result_count} found · `}
-                      {event.latency_ms !== null && `${event.latency_ms} ms`}
+                      {event.result_count !== null && event.op === "recall" && `${event.result_count} memories`}
                     </span>
                   </div>
                   <p className={`mt-0.5 text-stone-600 ${open ? "" : "line-clamp-1"}`}>{event.summary}</p>
@@ -114,6 +119,7 @@ export function MemoryPanel() {
                   {open && (
                     <p className="mt-1 text-stone-400">
                       {timeOfDay(event.ts)}
+                      {event.latency_ms !== null && ` · ${event.latency_ms} ms`}
                       {event.kind && ` · ${event.kind}`}
                       {event.error && ` · ${event.error}`}
                     </p>

@@ -1,8 +1,9 @@
-// Hash routing for four screens: #/workbench, #/vendors/<gstin>, #/insights, #/data.
+// Hash routing for five screens: #/home, #/workbench, #/vendors/<gstin>, #/insights, #/data.
 
 import { useEffect, useState } from "react";
 
 export type Route =
+  | { name: "home" }
   | { name: "workbench" }
   | { name: "vendor"; gstin: string }
   | { name: "insights" }
@@ -17,8 +18,10 @@ export function parseRoute(hash: string): Route {
       return { name: "insights" };
     case "data":
       return { name: "data" };
-    default:
+    case "workbench":
       return { name: "workbench" };
+    default:
+      return { name: "home" };
   }
 }
 

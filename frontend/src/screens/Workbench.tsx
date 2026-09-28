@@ -69,6 +69,11 @@ export function Workbench() {
           <h1 className="text-lg font-semibold text-stone-900">
             {client.name} · {periodLabel(period)}
           </h1>
+          {!hasRun && (
+            <p className="text-sm text-stone-600">
+              Munshi compares this client's purchase books with GSTR-2B and brings you only what doesn't match.
+            </p>
+          )}
           {hasRun && (
             <p className="num text-sm text-stone-600">
               ITC at risk <strong className="text-stone-900">{rupees(sumMoney(groups.map((g) => g.itc_at_risk)), { paise: false })}</strong>
@@ -105,8 +110,23 @@ export function Workbench() {
       )}
 
       {!hasRun && !runningHere && (
-        <Empty title={`${periodLabel(period)} has not been reconciled yet`}>
-          {periodRow?.has_2b ? "Run the reconciliation to see what needs your attention." : "Upload this month's books and GSTR-2B on the Data screen."}
+        <Empty title={`${periodLabel(period)} has not been checked yet`}>
+          {periodRow?.has_2b ? (
+            <div className="space-y-4">
+              <p>
+                Press the button and watch: Munshi matches the invoices, looks up each problem vendor in its
+                memory (right-hand panel), and suggests what to do. It takes about a minute.
+              </p>
+              <Button variant="primary" disabled={ws.busy} onClick={() => void ws.startRun(clientId, period, true)}>
+                Check {periodLabel(period)} now
+              </Button>
+              <p>
+                New here? <a href="#/home" className="text-accent-700 hover:underline">Start with the guided demo</a>.
+              </p>
+            </div>
+          ) : (
+            "Upload this month's books and GSTR-2B on the Data screen."
+          )}
         </Empty>
       )}
       {hasRun && groupsQuery.isPending && <Skeleton />}
@@ -138,9 +158,9 @@ export function Workbench() {
 function AutoSection({ groups }: { groups: Group[] }) {
   const ws = useWorkspace();
   return (
-    <details className="rounded-lg border border-emerald-200 bg-emerald-50/40">
+    <details open className="rounded-lg border border-emerald-200 bg-emerald-50/40">
       <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium text-emerald-800">
-        Auto-resolved ({groups.length}) · trusted patterns, handled without you
+        Handled automatically ({groups.length}): Munshi has been proven right on these, so it didn't ask you
       </summary>
       <ul className="divide-y divide-emerald-100 border-t border-emerald-100">
         {groups.map((g) => {

@@ -91,6 +91,8 @@ const OpenCard = forwardRef<
   const overriding = choice !== null && suggested !== null && choice !== suggested;
   const needsNote = overriding && note.trim() === "";
   const others = group.allowed_actions.filter((a) => a !== suggested);
+  // A warning is only convincing next to the memory it came from, so flagged cards open it.
+  const warned = suggestion?.flags.some((f) => f === "PATTERN_DRIFT" || f === "CROSS_CLIENT_RISK" || f === "VENDOR_RISK") ?? false;
 
   const submit = (action: Action) => {
     if (suggested !== null && action !== suggested && note.trim() === "") return;
@@ -115,7 +117,7 @@ const OpenCard = forwardRef<
       tabIndex={0}
       onKeyDown={onKeyDown}
       aria-label={`${group.vendor.name}: ${exceptionLabel(group.type)}`}
-      className="rounded-lg border border-stone-200 bg-white shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600"
+      className={`rounded-lg border bg-white shadow-sm ${warned ? "border-l-4 border-orange-300 border-l-orange-500" : "border-stone-200"} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600`}
     >
       <header className="flex flex-wrap items-start justify-between gap-2 px-4 pt-3">
         <div>
@@ -153,7 +155,7 @@ const OpenCard = forwardRef<
             </div>
             <blockquote className="border-l-2 border-accent-600 pl-3 text-sm text-stone-700">{suggestion.reasoning}</blockquote>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <Memories memories={suggestion.cited_memories} memoryOn={suggestion.memory_on} clientId={clientId} clients={clients} />
+              <Memories memories={suggestion.cited_memories} memoryOn={suggestion.memory_on} clientId={clientId} clients={clients} open={warned} />
               <TrustChip trust={group.trust} />
             </div>
             {suggestion.vendor_message && <VendorMessage text={suggestion.vendor_message} />}
@@ -252,22 +254,23 @@ function VendorLink({ group, onOpenVendor, strong = false }: {
   );
 }
 
-function Memories({ memories, memoryOn, clientId, clients }: {
+function Memories({ memories, memoryOn, clientId, clients, open }: {
   memories: CitedMemory[];
   memoryOn: boolean;
   clientId: string;
   clients: Client[];
+  open: boolean;
 }) {
   if (!memoryOn) return <span className="text-sm text-stone-500">No memories used (memory off)</span>;
   if (memories.length === 0) return <span className="text-sm text-stone-500">No memories used</span>;
   return (
-    <Disclosure label={`Based on ${memories.length} memor${memories.length === 1 ? "y" : "ies"}`}>
+    <Disclosure defaultOpen={open} label={`Why? Based on ${memories.length} memor${memories.length === 1 ? "y" : "ies"} from past months`}>
       <ul className="space-y-2">
         {memories.map((m) => {
           const other = m.client_id && m.client_id !== clientId ? clients.find((c) => c.id === m.client_id) : null;
           return (
             <li key={m.id} className="rounded-md bg-stone-50 px-3 py-2 text-sm">
-              <p className="text-stone-700">{m.text}</p>
+              <p className="text-stone-700">{memoryFact(m.text)}</p>
               <p className="mt-1 flex flex-wrap gap-2 text-xs text-stone-500">
                 {m.period && <span>{periodLabel(m.period)}</span>}
                 {other ? (
@@ -282,6 +285,11 @@ function Memories({ memories, memoryOn, clientId, clients }: {
       </ul>
     </Disclosure>
   );
+}
+
+/** Hindsight appends `| When: … | Involving: …` to extracted facts; the card shows the month and client itself. */
+export function memoryFact(text: string): string {
+  return text.split(" | ").filter((part) => !/^(When|Involving):/.test(part.trim())).join(" · ");
 }
 
 function VendorMessage({ text }: { text: string }) {

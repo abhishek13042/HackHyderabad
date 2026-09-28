@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { CLIENTS, group, suggestion } from "../test/fixtures";
 import { renderWithQuery } from "../test/render";
-import { ExceptionCard } from "./ExceptionCard";
+import { ExceptionCard, memoryFact } from "./ExceptionCard";
 
 function card(g = group()) {
   return renderWithQuery(<ExceptionCard group={g} clientId="C01" clients={CLIENTS} onOpenVendor={() => {}} />);
@@ -65,7 +65,7 @@ describe("ExceptionCard", () => {
         }),
       }),
     );
-    await userEvent.click(screen.getByText(/based on 1 memory/i));
+    // A flagged card opens its memories without a click.
     expect(screen.getByText("from Mehta Pharma")).toBeVisible();
     expect(screen.getByText(/seen at another client/i)).toBeInTheDocument();
   });
@@ -93,5 +93,13 @@ describe("ExceptionCard", () => {
     );
     expect(screen.getByText(/resolved automatically/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Undo" })).toBeInTheDocument();
+  });
+});
+
+describe("memoryFact", () => {
+  it("drops the When and Involving parts Hindsight adds", () => {
+    expect(memoryFact("Krishna did not file. | When: 2026-04-15 | Involving: Accountant | Late again.")).toBe(
+      "Krishna did not file. · Late again.",
+    );
   });
 });

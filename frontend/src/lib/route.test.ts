@@ -5,6 +5,7 @@ import { parseRoute, routeHash, type Route } from "./route";
 describe("hash routes", () => {
   it("round-trips every screen", () => {
     const routes: Route[] = [
+      { name: "home" },
       { name: "workbench" },
       { name: "insights" },
       { name: "data" },
@@ -15,9 +16,9 @@ describe("hash routes", () => {
     }
   });
 
-  it("falls back to the workbench", () => {
-    expect(parseRoute("")).toEqual({ name: "workbench" });
-    expect(parseRoute("#/nowhere")).toEqual({ name: "workbench" });
+  it("starts at home and falls back to it", () => {
+    expect(parseRoute("")).toEqual({ name: "home" });
+    expect(parseRoute("#/nowhere")).toEqual({ name: "home" });
     expect(parseRoute("#/vendors/")).toEqual({ name: "workbench" });
   });
 });

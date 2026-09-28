@@ -12,6 +12,7 @@ import pytest
 from backend.app.llm import (
     BACKOFF_SECONDS,
     MAX_RETRY_AFTER_SECONDS,
+    RATE_LIMIT_BACKOFF_SECONDS,
     TEMPERATURE,
     GroqChat,
     LLMUnavailableError,
@@ -78,7 +79,7 @@ def test_request_uses_json_mode_and_low_temperature() -> None:
 def test_rate_limit_backs_off_then_succeeds() -> None:
     groq, _, waits = chat(status_error(429), status_error(503), reply())
     assert groq.complete(MESSAGES).model == "primary"
-    assert waits == [1.0, 2.0]
+    assert waits == [RATE_LIMIT_BACKOFF_SECONDS[0], BACKOFF_SECONDS[1]]
 
 
 def test_rate_limit_honours_retry_after_up_to_a_cap() -> None:
@@ -89,7 +90,8 @@ def test_rate_limit_honours_retry_after_up_to_a_cap() -> None:
         reply(),
     )
     assert groq.complete(MESSAGES).model == "primary"
-    assert waits == [7.0, MAX_RETRY_AFTER_SECONDS, 4.0]
+    # at least the rate-limit backoff, longer if Groq asks, never past the cap
+    assert waits == [7.0, MAX_RETRY_AFTER_SECONDS, RATE_LIMIT_BACKOFF_SECONDS[2]]
 
 
 def test_retry_after_is_ignored_on_server_errors() -> None:
@@ -102,7 +104,7 @@ def test_falls_back_after_backoff_is_exhausted() -> None:
     failures = [status_error(429)] * (len(BACKOFF_SECONDS) + 1)
     groq, client, waits = chat(*failures, reply())
     assert groq.complete(MESSAGES).model == "fallback"
-    assert waits == list(BACKOFF_SECONDS)
+    assert waits == list(RATE_LIMIT_BACKOFF_SECONDS)
     assert [r["model"] for r in client.requests] == ["primary"] * 4 + ["fallback"]
 
 

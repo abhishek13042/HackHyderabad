@@ -19,7 +19,10 @@ GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 TEMPERATURE = 0.1
 TIMEOUT_SECONDS = 30.0
 BACKOFF_SECONDS = (1.0, 2.0, 4.0)
-"""Waits between attempts on one model before moving to the next (429 / 5xx / network)."""
+"""Waits between attempts on one model before moving to the next (5xx / network)."""
+RATE_LIMIT_BACKOFF_SECONDS = (5.0, 10.0, 20.0)
+"""The same for a 429. Groq's free tier counts tokens per minute, and parallel calls
+drain it together, so a few seconds is not enough for the window to free up."""
 MAX_RETRY_AFTER_SECONDS = 20.0
 """Cap on a 429's `retry-after`. Groq's free tier limits tokens per minute, and its
 window resets within a minute; a longer wait moves on to the next model instead."""
@@ -83,12 +86,15 @@ class GroqChat:
             raise LLMUnavailableError("GROQ_API_KEY is not set")
         errors: list[str] = []
         for model in self.models:
-            for wait in (*BACKOFF_SECONDS, None):
+            for attempt, wait in enumerate((*BACKOFF_SECONDS, None)):
                 try:
                     return self._call(model, messages)
                 except openai.APIStatusError as exc:
-                    if wait is not None and (asked := _retry_after(exc)) is not None:
-                        wait = max(wait, min(asked, MAX_RETRY_AFTER_SECONDS))
+                    if wait is not None and exc.status_code == 429:
+                        wait = max(
+                            RATE_LIMIT_BACKOFF_SECONDS[attempt],
+                            min(_retry_after(exc) or 0.0, MAX_RETRY_AFTER_SECONDS),
+                        )
                     if (generation := _failed_generation(exc)) is not None:
                         # Groq rejected the model's own output as invalid JSON. That is
                         # bad output, not an outage: hand it back for the agent to retry.
