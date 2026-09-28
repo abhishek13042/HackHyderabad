@@ -1,6 +1,6 @@
 # SPEC-00 — Product Requirements
 
-**Status:** APPROVED · **Owner:** Both · **Depends on:** —
+**Status:** DONE · **Owner:** Both · **Depends on:** —
 
 ## 1. Purpose
 
@@ -100,3 +100,13 @@ Targets are hypotheses we test; the article and README report whatever the evals
 
 AC-00-1 → [TRACEABILITY.md](TRACEABILITY.md). AC-00-3 → root `README.md`.
 AC-00-2 is checked at every review.
+
+## 11. Verification (final review)
+
+- AC-00-1: every story US-1…US-10 is mapped in TRACEABILITY.md, and those criteria are met in SPEC-03…SPEC-08.
+- AC-00-2: no login, portal/Tally integration, OCR, return filing, message sending, or
+  non-B2B documents. Ingest rejects reverse-charge rows (`rev` must be `N`), and
+  vendor messages are drafts only.
+- AC-00-3: the README's *The problem*, *Who it's for* and *What Munshi does* sections
+  follow §2–§4.
+- §7 metrics are measured by SPEC-09, and the results are reported as they come out.

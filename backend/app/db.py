@@ -24,7 +24,7 @@ from backend.app.domain.enums import (
     TrustLevel,
 )
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class SchemaVersionError(RuntimeError):
@@ -147,6 +147,8 @@ CREATE TABLE suggestions (
     final_confidence  REAL NOT NULL CHECK (final_confidence BETWEEN 0 AND 1),
     reasoning         TEXT NOT NULL,
     cited_memory_ids  TEXT NOT NULL DEFAULT '[]' {_json("cited_memory_ids")},
+    -- What the cited memories said when the suggestion was made, for the UI.
+    cited_memories    TEXT NOT NULL DEFAULT '[]' {_json("cited_memories")},
     vendor_message    TEXT,
     guardrail_events  TEXT NOT NULL DEFAULT '[]' {_json("guardrail_events")},
     model             TEXT NOT NULL,

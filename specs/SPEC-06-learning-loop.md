@@ -1,6 +1,6 @@
 # SPEC-06 — Learning Loop
 
-**Status:** DRAFT · **Owner:** A · **Depends on:** SPEC-04, SPEC-05
+**Status:** DONE · **Owner:** A · **Depends on:** SPEC-04, SPEC-05
 
 ## 1. Purpose
 
@@ -12,7 +12,7 @@ Make the agent's learning **real and checkable**, not just "it reads old notes":
 
 ## 2. Scope
 
-**In:** outcome verification, trust computation, drift detection, auto-resolution, undo, run order.
+**In:** outcome verification, trust computation, drift detection, auto-resolution, undo, run order, and **seeding** (moved from SPEC-04 §12: it replays Jan–Mar through this loop).
 **Out:** the LLM prompt (SPEC-05), storage templates (SPEC-04).
 
 ## 3. Run order (every reconciliation of client C, period P)
@@ -131,7 +131,36 @@ with a citation to another client's memory (SPEC-05 G5). Expected: raised for
 - AC-06-6: Every outcome and drift event produces exactly one retain.
 - AC-06-7: With memory OFF, no auto-resolution happens.
 
-## 11. Open questions
+## 11. Implementation
 
-- Q1: Should trust be per **client + vendor** instead of firm-wide? Firm-wide learns faster and enables cross-client; per-client is more conservative. Proposed: firm-wide.
-- Q2: Is "streak ≥ 3" too fast for AUTO in real life? For a 4-month demo it has to be; note it in DECISIONS.md as a tunable.
+| Module | Role |
+|---|---|
+| `backend/app/learning.py` | Pure rules: `verify` (§4), `trust` (§5), `detect_drift` (§6), `expected_lag`, `arrival_after_wrong` (§9). No I/O. |
+| `backend/app/store.py` | All SQL: dataset, runs, exceptions, suggestions, decisions, outcomes, trust snapshots, drift events. |
+| `backend/app/pipeline.py` | `Pipeline.run(client, period, memory_on)`, `decide(key, action, note)`, `undo(key, action, note)`. |
+| `backend/app/seed.py` | `load_dataset(store, dir)`, `seed(pipeline, dir, periods=None)`: replays all periods but the last with the ground truth's `accountant_action`. |
+
+Decisions made while building (see DECISIONS.md D23–D29):
+- **History is strictly earlier periods.** Trust for period P uses decisions with period < P; verdicts checked ≤ P. So every client in P sees the same trust, whatever order clients run in.
+- **Outcome rows only when there is something to learn**: a DEFER verdict, or an arrival after another action (`NOT_APPLICABLE` with evidence). One row ⇒ one M2 retain; a §9 late arrival updates the evidence and re-retains the same document.
+- **Drift waits for every client's 2B.** An invoice is overdue only if its own client has processed the due period (`Store.processed_through`), so a client not yet run can't cause a false alarm.
+- **Memory OFF still records.** It changes what the agent sees (`AgentContext.effective`) and forbids auto-resolution; decisions, outcomes and drift are still stored and retained.
+- **Runs:** a client's periods run in order; only the latest can run again. A re-run discards that period's runs (exceptions, suggestions and trust cascade) and reopens invoices its 2B closed; decisions, outcomes and drift are history and stay.
+- **Undo** = `undo(key, action)`: only for an AUTO decision, and only to a different action. `wrong_recent` looks for an undone AUTO decision in P−1 or P.
+- **Memory documents:** `resolution:{group_key}`, `outcome:{group_key}`, `drift:{gstin}:{period}`, dated the review day (15th of the next month).
+
+| AC | Test |
+|---|---|
+| AC-06-1 | `test_pipeline.py::test_trust_trajectories_match_the_spec`, `test_learning.py::test_trust_levels` |
+| AC-06-2 | `test_pipeline.py::test_reddy_drifts_in_april_and_its_deferral_was_wrong` |
+| AC-06-3 | `test_pipeline.py::test_bhavani_is_auto_resolved_in_april` |
+| AC-06-4 | `test_pipeline.py::test_only_accept_or_defer_is_ever_automatic` (6 random policies) |
+| AC-06-5 | `test_pipeline.py::test_undo_drops_the_pattern_to_observe`, `test_undo_in_the_same_period_holds_on_a_rerun` |
+| AC-06-6 | `test_pipeline.py::test_every_outcome_and_drift_event_is_retained_once` |
+| AC-06-7 | `test_pipeline.py::test_memory_off_never_auto_resolves_but_still_learns` |
+
+## 12. Open questions (resolved)
+
+
+- Q1: Should trust be per **client + vendor** instead of firm-wide? Firm-wide learns faster and enables cross-client; per-client is more conservative. **Resolved: firm-wide (D5).**
+- Q2: Is "streak ≥ 3" too fast for AUTO in real life? For a 4-month demo it has to be; note it in DECISIONS.md as a tunable. **Resolved: tunable constants in `learning.py` (D6).**

@@ -5,6 +5,7 @@ Internally a period is `YYYY-MM` (e.g. `2026-03`). GSTR-2B JSON uses `MMYYYY`
 """
 
 import re
+from datetime import date, timedelta
 from typing import Annotated
 
 from pydantic import AfterValidator
@@ -63,6 +64,15 @@ def months_between(start: str, end: str) -> int:
     start_year, start_month = _split(start)
     end_year, end_month = _split(end)
     return (end_year - start_year) * 12 + (end_month - start_month)
+
+
+def first_day(period: str) -> date:
+    year, month = _split(period)
+    return date(year, month, 1)
+
+
+def last_day(period: str) -> date:
+    return first_day(add_months(period, 1)) - timedelta(days=1)
 
 
 def label(period: str) -> str:

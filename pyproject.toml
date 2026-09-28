@@ -16,6 +16,12 @@ dependencies = [
     "pydantic-settings>=2.4,<3",
     # Must match the hindsight-api server version (requirements-hindsight.lock).
     "hindsight-client==0.10.1",
+    # Groq speaks the OpenAI API; used only in backend/app/llm.py.
+    "openai>=3.19,<4",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.30,<1",
+    # Multipart form parsing for the upload endpoint.
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]
@@ -25,16 +31,22 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.6",
     "mypy>=1.11",
+    # FastAPI's TestClient.
+    "httpx>=0.27,<1",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["backend"]
+packages = ["backend", "evals"]
 
 # --- pytest -----------------------------------------------------------------
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
 addopts = "-ra --strict-markers --strict-config"
 xfail_strict = true
+markers = [
+    "hindsight: needs a running Hindsight server (skipped when unreachable)",
+    "groq: calls the Groq API (skipped without GROQ_API_KEY)",
+]
 filterwarnings = ["error"]
 
 # --- ruff -------------------------------------------------------------------
@@ -55,6 +67,8 @@ select = [
     "PTH",      # use pathlib
     "DTZ",      # timezone-aware datetimes
 ]
+# The eval report is prose: en dashes for "not measured" and ranges, minus signs in ON − OFF.
+allowed-confusables = ["–", "−"]
 
 [tool.ruff.lint.per-file-ignores]
 "backend/tests/**" = ["B011"]
@@ -64,4 +78,4 @@ select = [
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
-files = ["backend"]
+files = ["backend", "evals"]

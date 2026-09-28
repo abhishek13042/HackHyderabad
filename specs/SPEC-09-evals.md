@@ -1,6 +1,6 @@
 # SPEC-09 — Evaluation Harness
 
-**Status:** DRAFT · **Owner:** A · **Depends on:** SPEC-02, SPEC-05, SPEC-06
+**Status:** DONE (harness; live numbers pending) · **Owner:** A · **Depends on:** SPEC-02, SPEC-05, SPEC-06
 
 ## 1. Purpose
 
@@ -91,5 +91,37 @@ evals/results/<run_id>/
 
 ## 9. Open questions
 
-- Q1: Should the simulated accountant sometimes be wrong / skip notes to test robustness? Proposed: stretch goal (`--noisy-accountant`).
-- Q2: Does Hindsight's fact extraction add enough latency that a full run exceeds 30 min? Measure on day 1.
+- Q1: Should the simulated accountant sometimes be wrong / skip notes to test robustness? Still a stretch goal (`--noisy-accountant`), not built.
+- Q2: Does Hindsight's fact extraction add enough latency that a full run exceeds 30 min? Open until the first live run; `config.json` and the per-month progress lines give the timing.
+
+## 10. Implementation
+
+| Path | Role |
+|---|---|
+| `evals/harness.py` | `CellRun`: one condition of one repeat, with its own SQLite file and bank, through the real `Pipeline`; `RecordingAgent` keeps what the agent saw and said; `Throttled` spaces LLM calls (`--rpm`). |
+| `evals/metrics.py` | Pure scoring: E1–E10, the gap, scenarios S1–S5, the rules-only baseline, the matcher check and the SPEC-00 targets. |
+| `evals/chart.py` | The learning curve as a hand-written SVG. |
+| `evals/report.py` | `python -m evals.report <run_dir>`: metrics.json, learning_curve.json, learning_curve.svg, report.md. |
+| `evals/run.py` | `python -m evals.run`: regenerates the dataset from `--seed`, runs every cell with checkpoints, then writes the report. |
+| `backend/app/seed.py` | `decide_as_accountant`, now shared by seeding and the harness. |
+| `backend/app/agent.py` | `Suggestion.attempts`, the LLM calls behind a suggestion (for E8). |
+| `docs/EVALS.md` | Method, commands, outputs, metric definitions, known limits. |
+
+Decisions made while building (DECISIONS.md D41–D45):
+- **The dataset is regenerated from the seed** into the run's `work/` folder, and each condition and repeat gets its own database. A run never reads or changes the app's database, and `--seed` means something.
+- **Labels are joined at report time.** `suggestions.jsonl` holds what the agent said, and `ground_truth.json` is copied beside it, so `evals.report` needs only the run folder and gives the same bytes every time.
+- **An SVG instead of a PNG**: it needs no plotting dependency, is byte-reproducible, and renders on GitHub.
+- **Checkpoints are per client-month** (`progress.json`). A client's periods must run in order, so resume skips recorded months and re-runs the one that was cut off, which the pipeline allows because it's the latest.
+- **`--memory ram`** checks the harness offline with the tests' in-process memory. It cannot resume, and the report names the memory used.
+- **Pooled repeats**: the accuracies are over all suggestions of a condition. A scenario passes only if it passes in every repeat.
+- **No live numbers yet.** They need Hindsight and a Groq key; `docs/EVALS.md` says so rather than showing made-up results.
+
+| AC | Verified by |
+|---|---|
+| AC-09-1 | `test_one_command_writes_metrics_and_report` (`evals.run` end to end, memory in RAM, answers from the ground truth). |
+| AC-09-2 | `test_each_condition_gets_a_fresh_bank`: `config.json` names one bank per condition, both containing the run id. |
+| AC-09-3 | `test_rescoring_saved_results_gives_the_same_files`. |
+| AC-09-4 | `test_insights_reads_the_learning_curve` (`/insights` reader on the run's folder). |
+| AC-09-5 | `test_scenarios_are_reported_with_the_suggestion_text`, including a failing S3 shown as failed. |
+| Resume, `--rpm` | `test_a_crashed_run_resumes_where_it_stopped`, `test_throttle_spaces_calls`. |
+| Scoring rules | `test_accuracy_gap_and_flags`, `test_an_unsafe_action_reaching_the_accountant_is_counted`, `test_rules_only_baseline`. |

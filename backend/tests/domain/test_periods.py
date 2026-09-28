@@ -1,10 +1,14 @@
+from datetime import date
+
 import pytest
 
 from backend.app.domain.periods import (
     PeriodError,
     add_months,
+    first_day,
     from_return_period,
     label,
+    last_day,
     months_between,
     to_return_period,
     validate_period,
@@ -49,3 +53,9 @@ def test_rejects_bad_periods(value: str) -> None:
 def test_rejects_bad_return_periods(value: str) -> None:
     with pytest.raises(PeriodError):
         from_return_period(value)
+
+
+def test_first_and_last_day() -> None:
+    assert first_day("2026-02") == date(2026, 2, 1)
+    assert last_day("2026-02") == date(2026, 2, 28)
+    assert last_day("2026-12") == date(2026, 12, 31)

@@ -4,8 +4,27 @@
 
 Built on [Hindsight](https://github.com/vectorize-io/hindsight) agent memory.
 
-> Status: early build. Specs are approved; the domain model (SPEC-01) is implemented.
-> See [specs/](specs/README.md) for the full design.
+**Video:** [VIDEO_URL] · **Design:** [specs/](specs/README.md) · **How memory is used:** [docs/HINDSIGHT_USAGE.md](docs/HINDSIGHT_USAGE.md)
+
+<!-- Screenshots go in docs/images/ after recording (docs/DEMO.md §3):
+![Workbench with cited memories](docs/images/workbench.png)
+![Reddy Steels drift card](docs/images/drift.png)
+-->
+
+## Quickstart (about a minute, once installed)
+
+With the environments from [Development setup](#development-setup-windows-powershell)
+and your keys in `.env`, start three terminals from the repo root:
+
+```powershell
+.venv-hindsight\Scripts\hindsight-api                      # 1. memory on :8888
+.venv\Scripts\uvicorn backend.app.main:app --port 8000     # 2. API on :8000
+cd frontend; npm run dev                                   # 3. UI on http://localhost:5173
+```
+
+Open the UI, go to **Data → Load sample data**, and wait for January to March to
+replay. Then pick a client, choose **April** and click **Run reconciliation**.
+The story to look for is in [docs/DEMO.md](docs/DEMO.md).
 
 ## The problem
 
@@ -42,6 +61,26 @@ decisions to a black box.
 
 The agent suggests; the CA decides.
 
+## Results
+
+The evaluation replays the same four months with memory ON and OFF (same model,
+prompt and simulated accountant) and reports accuracy per month, the held-out
+April, unsafe suggestions and tokens per group. Method: [docs/EVALS.md](docs/EVALS.md).
+Numbers: the newest `evals/results/<run_id>/report.md` ([RESULTS_LINK]).
+
+## Documentation
+
+| Document | What's in it |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Components, the monthly learning loop, guardrails, failure modes |
+| [docs/HINDSIGHT_USAGE.md](docs/HINDSIGHT_USAGE.md) | Exactly what is retained, recalled and reflected, and why |
+| [docs/EVALS.md](docs/EVALS.md) | Evaluation method and metrics |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | Design decisions log |
+| [docs/RESEARCH.md](docs/RESEARCH.md) | Papers behind the design, and what we chose not to do |
+| [docs/GLOSSARY.md](docs/GLOSSARY.md) | GST terms and Munshi's own vocabulary |
+| [docs/DEMO.md](docs/DEMO.md) | Demo runbook and video script |
+| [specs/](specs/README.md) | The specs SPEC-00 … SPEC-10 |
+
 ## Repository layout
 
 ```
@@ -50,9 +89,27 @@ backend/app/db.py      SQLite schema
 backend/app/config.py  settings from .env
 backend/app/ingest.py  purchase-register CSV and GSTR-2B JSON readers/writers
 backend/app/matcher.py deterministic books-vs-2B reconciliation
+backend/app/memory.py  Hindsight wrapper: event log, offline queue, caches
+backend/app/memory_text.py  what is retained and asked, as plain English
+backend/app/agent.py   one suggestion per exception group: prompt, guardrails, retries
+backend/app/llm.py     Groq chat client: JSON mode, backoff, fallback model
+backend/app/learning.py  self-check, trust ladder and drift rules (pure)
+backend/app/store.py   all SQL for runs, exceptions, decisions, outcomes, drift
+backend/app/pipeline.py  one reconciliation run, decisions and undo
+backend/app/seed.py    loads the dataset and replays history
+backend/app/services.py  what API requests share: memory, agent, work lock, jobs
+backend/app/schemas.py API request and response models
+backend/app/routers/   API endpoints (data, runs, decisions, insights, demo)
+backend/app/main.py    FastAPI app: routers, CORS, error envelope
+backend/app/prompts/   system prompt with few-shot examples
 backend/datagen/       synthetic dataset generator (never imported by the app)
-backend/scripts/       command-line entry points
+backend/scripts/       command-line entry points (generate_data, demo_check)
 backend/tests/         pytest suite
+frontend/src/api/      typed API client and TanStack Query hooks
+frontend/src/lib/      shared state, formatting, labels, hash routes
+frontend/src/components/  exception card, memory panel, top bar, UI parts
+frontend/src/screens/  workbench, vendor profile, insights, data
+evals/                 evaluation harness: memory ON vs OFF, metrics, report
 specs/                 spec-driven design documents (SPEC-00 … SPEC-10)
 ```
 
@@ -100,6 +157,45 @@ Exact, reproducible versions are in the lock files, generated with pip-tools:
 ```powershell
 .venv\Scripts\pip-compile --strip-extras -o requirements.lock pyproject.toml
 .venv\Scripts\pip-compile --strip-extras --extra dev -o requirements-dev.lock pyproject.toml
+```
+
+### API server
+
+```powershell
+.venv\Scripts\uvicorn backend.app.main:app --port 8000   # docs at http://localhost:8000/docs
+```
+
+It runs without Hindsight or a Groq key (memory off, suggestions escalate); `/api/health` says what is up.
+
+### Frontend
+
+Requires **Node 20+**. With the API running on port 8000:
+
+```powershell
+cd frontend
+npm ci
+npm run dev          # http://localhost:5173, /api is proxied to :8000
+```
+
+Checks: `npm run typecheck`, `npm test`, `npm run build`.
+
+### Demo rehearsal
+
+With all three processes running, this resets the demo, seeds, runs April and
+checks every beat of the video script. It deletes the demo data, so it asks for `--yes`:
+
+```powershell
+.venv\Scripts\python -m backend.scripts.demo_check --yes --strict
+```
+
+### Evaluation
+
+Needs Hindsight and `GROQ_API_KEY`. It replays January to April with memory ON and
+OFF and writes `evals/results/<run_id>/report.md`; the Insights screen charts the
+newest run. The method and metrics are in [docs/EVALS.md](docs/EVALS.md).
+
+```powershell
+.venv\Scripts\python -m evals.run --conditions on,off --seed 42 --repeats 1
 ```
 
 ## Data

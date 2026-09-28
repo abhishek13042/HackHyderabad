@@ -5,9 +5,10 @@ INV-1: ACCEPT is never valid for MISSING_IN_2B or ITC_INELIGIBLE
 INV-2: only ACCEPT and DEFER may ever be resolved automatically.
 """
 
+from decimal import Decimal
 from types import MappingProxyType
 
-from backend.app.domain.enums import Action, ExceptionType
+from backend.app.domain.enums import Action, ExceptionType, TrustLevel
 
 ALLOWED_ACTIONS: MappingProxyType[ExceptionType, frozenset[Action]] = MappingProxyType(
     {
@@ -41,3 +42,12 @@ def is_action_allowed(exception_type: ExceptionType, action: Action) -> bool:
 
 def can_auto_resolve(exception_type: ExceptionType, action: Action) -> bool:
     return action in AUTO_RESOLVABLE_ACTIONS and is_action_allowed(exception_type, action)
+
+
+CONFIDENCE_CAPS: MappingProxyType[TrustLevel, float] = MappingProxyType(
+    {TrustLevel.OBSERVE: 0.6, TrustLevel.SUGGEST: 0.85, TrustLevel.AUTO: 1.0}
+)
+"""SPEC-06: the most confidence a suggestion may show at each trust level."""
+
+MAX_ACCEPTABLE_DIFF = Decimal("500.00")
+"""SPEC-05 G4: above this, an amount difference is never simply accepted."""

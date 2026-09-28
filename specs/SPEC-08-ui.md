@@ -1,6 +1,6 @@
 # SPEC-08 — User Interface
 
-**Status:** DRAFT · **Owner:** B · **Depends on:** SPEC-07
+**Status:** DONE · **Owner:** B · **Depends on:** SPEC-07
 
 ## 1. Purpose
 
@@ -111,7 +111,41 @@ Offline Hindsight → yellow banner "Memory offline — suggestions made without
 - AC-08-8: Clicking a vendor name opens its profile with the reflect summary, per-client timeline with outcomes, and trust per issue type (US-8).
 - AC-08-9: Insights shows ITC at risk, auto-resolved count, drift and cross-client counts for the selected period, plus the learning curve (US-9).
 
-## 8. Open questions
+## 8. Open questions (resolved)
 
-- Q1: Show the numeric confidence or only High/Medium/Low? Proposed: label, number on hover.
-- Q2: Ship a "chat with memory" box? Proposed: no, only the debug recall box on Insights — keeps focus.
+- Q1: Label, with the number on hover. Done.
+- Q2: No chat box; only the debug "Ask memory" recall box on Insights. Done.
+
+## 9. Implementation
+
+| Path (`frontend/src/`) | Role |
+|---|---|
+| `api/types.ts`, `api/client.ts` | TypeScript mirrors of `schemas.py`; a fetch wrapper that turns the error envelope into `ApiError`. Money stays a string. |
+| `api/hooks.ts` | One TanStack Query hook per endpoint, with the polling below; decisions refresh every view that shows them. |
+| `lib/workspace.tsx` | Shared state: route, client, period, and the one background job (a run or the seed). |
+| `lib/format.ts`, `lib/labels.ts`, `lib/route.ts` | ₹ with Indian grouping and no floats, plain-English labels for every enum, hash routes. |
+| `components/` | `TopBar` (pickers, memory switch, status), `ExceptionCard`, `UndoForm`, `MemoryPanel`, badges and small UI parts. |
+| `screens/` | `Workbench` (S2), `VendorProfile` (S3), `Insights` (S4, lazy-loaded with the chart library), `DataScreen` (S1). |
+
+Run it (with the API on port 8000): `cd frontend`, `npm ci`, `npm run dev`, open `http://localhost:5173`.
+Checks: `npm run typecheck`, `npm test`, `npm run build`.
+
+Decisions made while building (DECISIONS.md D36–D40):
+- **Hash routes** (`#/workbench`, `#/vendors/<gstin>`, `#/insights`, `#/data`): four screens need no router library, and links survive a reload.
+- **Polling, no push**: runs and jobs every 1 s while running, health every 5 s, the memory panel every 1 s while busy and 5 s otherwise. A decision refreshes the panel at once, which is what makes AC-08-4's 2 s hold.
+- **The Auto section is the run's `auto_resolved_keys`**, not every AUTO decision: a memory-off re-run keeps earlier automatic decisions (D27), but they were not resolved by that run, so AC-08-5 shows no Auto section.
+- **The firm name comes from `/health`** (`firm`), and `/insights` counts cross-client warnings and safety rules applied.
+- **Memory fails fast when Hindsight is down**: after one failure, memory calls are skipped for 15 s (logged as offline, retains queued) and only the `/health` probe tries. A refused connection costs about 2 s on Windows, so without this the offline seed took minutes.
+- **The memory panel starts from the latest 40 events** (`/memory/events?latest=true`), then asks only for newer ids.
+
+| AC | Verified by |
+|---|---|
+| AC-08-1 | Browser run on a fresh database: load sample → C01 Apr 2026 → Run → Accept; no API calls by hand. |
+| AC-08-2 | `ExceptionCard.test.tsx` "blocks an override until a note is written"; API: `test_override_needs_a_note`. |
+| AC-08-3 | `ExceptionCard.test.tsx` "names the other client a memory came from". |
+| AC-08-4 | Browser: recall rows during the run, the decision's retain row within 1.5 s of Accept. |
+| AC-08-5 | `ExceptionCard.test.tsx` "says no memories were used when memory is off"; the Auto section uses the run's `auto_resolved_keys`. |
+| AC-08-6 | `ExceptionCard.test.tsx` "offers Undo on an automatic decision"; the move back is the API's (`test_undo_*`). |
+| AC-08-7 | Browser at 768 px: no horizontal page scroll, the memory panel moves below the screen; no console errors in the flow. |
+| AC-08-8 | Browser: vendor name → profile with header, profile text (or the offline notice), timeline and trust ladders. |
+| AC-08-9 | Browser: Insights tiles (ITC at risk, auto-resolved, overrides, drift, cross-client, safety rules) and the learning curve (empty state until SPEC-09 has results); API: `test_insights`. |

@@ -18,14 +18,16 @@ htmlcov/
 data/generated/
 data/*.db
 data/*.db-*
-evals/results/
+evals/results/*/work/
 
 # Frontend
 node_modules/
 frontend/dist/
+*.tsbuildinfo
 
 # OS / editors
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+.claude/

@@ -1,6 +1,6 @@
 # SPEC-07 — Backend API
 
-**Status:** DRAFT · **Owner:** B · **Depends on:** SPEC-01, SPEC-03, SPEC-05, SPEC-06
+**Status:** DONE · **Owner:** B · **Depends on:** SPEC-01, SPEC-03, SPEC-05, SPEC-06
 
 ## 1. Purpose
 
@@ -151,6 +151,40 @@ DATA_DIR=data/generated
 - AC-07-6: `/demo/reset` without the confirm body → 422.
 - AC-07-7: API keys never appear in logs or responses.
 
-## 8. Open questions
+## 8. Implementation
 
-- Q1: Polling vs server-sent events for the memory panel? Proposed: polling (simpler, good enough).
+| Module | Role |
+|---|---|
+| `backend/app/main.py` | `create_app(services=None)`: lifespan, CORS, routers under `/api`, the error envelope. `app` for uvicorn. |
+| `backend/app/services.py` | What requests share: settings, one `Memory`, the agent, the work lock, seed jobs. A SQLite connection per request and per background task. |
+| `backend/app/schemas.py` | Request and response models. Money fields are `Money` (2-decimal strings). |
+| `backend/app/routers/common.py` | `ApiError`, dependencies, lookups that 404, shared views. |
+| `backend/app/routers/{data,runs,decisions,insights,demo}.py` | The endpoints of §3, grouped as in the tables. |
+
+Run it: `.venv\Scripts\uvicorn backend.app.main:app --port 8000`, docs at `http://localhost:8000/docs`.
+
+Decisions made while building (DECISIONS.md D30–D35):
+- **One job at a time.** A run or seed takes a process-wide work lock in the request (busy → `409`) and releases it when the background task ends. Runs change trust and memory for every client, so two at once would race.
+- **Seed is a job**, not a run: `POST /demo/seed` returns `202 {job_id, status, done, total}`; poll `GET /demo/jobs/{job_id}`.
+- **Summary**: `auto_resolved` is a count and `auto_resolved_keys` lists the groups; `memory_degraded` is true when memory was on but Hindsight was offline; also `exceptions`, `matched`, `drift`, `late_arrivals`, `outcomes`.
+- **Groups** also carry `allowed_actions` (for the UI's buttons) and `guardrail_details` (rule + detail) beside the rule names.
+- **Undo** always needs a note: it says why an automatic decision was wrong.
+- **Vendor page with memory offline** returns `profile: null` instead of `503`, since the rest of the page comes from SQLite. `/insights` does the same with `memory_offline: true`; only `/memory/recall` is memory-only.
+- **Reset deletes the memory bank first**; if Hindsight is down it answers `503` and wipes nothing, so the database and the bank never disagree.
+- **Uploads** also refuse (`409`) a period earlier than one already run, and warn about empty files and unknown suppliers.
+- **The Hindsight SDK runs on one thread of its own** with its own event loop: its sync calls drive the calling thread's loop, which fails during FastAPI's startup.
+- **No Groq key** is not a startup error: `/health` says `llm: down` and suggestions fall back to ESCALATE.
+
+| AC | Test (`backend/tests/test_api.py`) |
+|---|---|
+| AC-07-1 | every endpoint: `test_health_*`, `test_clients_and_periods`, `test_run_*`, `test_groups_*`, `test_*decision*`, `test_undo_*`, `test_vendor_page`, `test_trust_table`, `test_insights`, `test_memory_events_and_recall`, `test_upload_*`, `test_seed_*`, `test_reset_*` (in-memory backend, scripted chat) |
+| AC-07-2 | `test_no_money_is_ever_a_float` (every body the module received) |
+| AC-07-3 | `test_override_needs_a_note` |
+| AC-07-4 | `test_disallowed_action_is_rejected` |
+| AC-07-5 | `test_reddy_shows_pattern_drift_in_april` |
+| AC-07-6 | `test_reset_needs_confirmation` |
+| AC-07-7 | `test_api_keys_never_leak` |
+
+## 9. Open questions (resolved)
+
+- Q1: Polling vs server-sent events for the memory panel? **Resolved: polling (D10).**

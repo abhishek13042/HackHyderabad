@@ -1,6 +1,6 @@
 # SPEC-10 — Demo, Video & Submission
 
-**Status:** DRAFT · **Owner:** Both · **Depends on:** all
+**Status:** DONE (repo side; recording and publishing are the team's actions) · **Owner:** Both · **Depends on:** all
 
 ## 1. Purpose
 
@@ -11,7 +11,7 @@ event or call it a competition** anywhere in this content (see AC-10-3).
 ## 2. Demo preconditions (checklist)
 
 - [ ] `hindsight-api` running, `/health` all green.
-- [ ] `/demo/reset` then `/demo/seed` done (Jan–Mar learned; April untouched).
+- [ ] `/demo/reset` then `/demo/seed` done (Jan–Mar learned); April run for C01 and C02, C03 April left for camera.
 - [ ] Latest eval results present (Insights chart populated).
 - [ ] Browser at 1440×900, zoom 110%, notifications off; screen recorder at 1080p.
 - [ ] Backup: a pre-recorded run of every step in case Groq is slow.
@@ -25,8 +25,8 @@ event or call it a competition** anywhere in this content (see AC-10-3).
 | 0:45–1:15 | Feb → Mar quickly; memory panel | "Every decision and note is retained. Every month, it checks whether its past advice was right." Show ✓ outcome rows, Laxmi Packaging going to Auto. |
 | 1:15–1:45 | April workbench | "April, live. Bhavani Chemicals: auto-deferred — it's been right twice. Laxmi's ₹6 rounding: auto-accepted, the firm's own rule." Expand cited memories. |
 | 1:45–2:20 | Reddy Steels card | "Reddy Steels looked exactly like Bhavani — until now. Its March invoice never arrived. Munshi noticed its own assumption broke, dropped its trust, and says chase." Show drift chip, trust reset, vendor message. Accountant chooses Hold payment + note → retain appears. |
-| 2:20–2:45 | C03 · Krishna Logistics (March) | "A new client buys from Krishna Logistics. Munshi remembers it never filed for another client — warns before the loss." Show "from Sri Balaji Textiles" tag. |
-| 2:45–3:05 | Toggle memory OFF, re-run April | "Same model, memory off: generic, low-confidence, misses the drift and the warning." |
+| 2:20–2:45 | C03 · April, run live · Krishna Logistics card | "A different client buys from Krishna Logistics. Munshi remembers it never filed for Sri Balaji Textiles — warns before the loss." Show the cited memory tagged with the other client. |
+| 2:45–3:05 | Toggle memory OFF, re-run C03 April | "Same model, memory off: generic, low-confidence, no warning." Toggle back ON. (No decisions on C03 before this: they survive a re-run, D27.) |
 | 3:05–3:25 | Insights | Learning curve ON vs OFF, 0 unsafe suggestions, % auto-resolved. |
 | 3:25–3:30 | Closing | "Munshi: it remembers, checks itself, and earns trust." Repo link. |
 
@@ -79,3 +79,37 @@ Checklist before posting: no event name (AC-10-3), no API keys in screenshots, s
 - AC-10-3: `grep -riE "hack[a]thon"` over the whole repo and all content returns nothing (the bracket keeps this line from matching itself).
 - AC-10-4: A teammate follows the README on a clean clone and reaches the workbench.
 - AC-10-5: Both members' articles, LinkedIn and Reddit posts are published and linked in the submission form.
+
+## 8. Implementation
+
+| Deliverable | Where |
+|---|---|
+| Demo runbook and final video script | `docs/DEMO.md` (supersedes §2–§3 where they differ) |
+| Rehearsal (AC-10-1) | `backend/scripts/demo_check.py`, tested in `backend/tests/test_demo_check.py` |
+| README: quickstart, results, documentation table, video placeholder | `README.md` |
+| Architecture, memory usage, research, glossary | `docs/ARCHITECTURE.md`, `docs/HINDSIGHT_USAGE.md`, `docs/RESEARCH.md`, `docs/GLOSSARY.md` |
+| Article drafts (A and B), LinkedIn and Reddit drafts | `docs/content/article-a.md`, `docs/content/article-b.md`, `docs/content/posts.md` |
+
+Decisions: D46–D49 in `docs/DECISIONS.md`.
+
+**`demo_check`** (standard library only) talks to a running API. It resets, seeds,
+runs C03 April with memory OFF, then April for every client with memory ON, and
+checks each beat of the script: Bhavani auto-deferred, Laxmi auto-accepted, Reddy
+drift with no DEFER (then a HOLD_PAYMENT decision with a note), the Krishna
+cross-client warning, the insights learning curve and the memory events. It
+repeats this `--rounds` times (default 2). It exits 1 on any API error, and with
+`--strict` 2 if any beat was missed. It refuses to run without `--yes`, because
+it deletes the demo data.
+
+**Acceptance criteria**
+
+| AC | How |
+|---|---|
+| AC-10-1 | `python -m backend.scripts.demo_check --yes --strict` against the live stack. The test suite runs the same script in-process (with the scripted model) and checks two clean rounds. |
+| AC-10-2 | Team action: record and upload, then replace `[VIDEO_URL]` in the README. |
+| AC-10-3 | `grep -riE "hack[a]thon" . --exclude-dir={node_modules,.venv,.venv-hindsight,dist}` returns nothing (checked on the repo; run again on the final posts). |
+| AC-10-4 | Team action: a teammate follows the README on a clean clone. |
+| AC-10-5 | Team action: publish the drafts in `docs/content/` and link them in the submission form. |
+
+The drafts contain placeholders (`[VIDEO LINK]`, `[REPO LINK]`, `[ON %]` …) rather
+than numbers: every number must come from a real `evals/results/<run_id>/report.md`.

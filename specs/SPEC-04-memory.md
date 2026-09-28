@@ -1,6 +1,6 @@
 # SPEC-04 — Memory Layer (Hindsight)
 
-**Status:** DRAFT · **Owner:** Both · **Depends on:** SPEC-01
+**Status:** DONE (live checks pending a running server) · **Owner:** Both · **Depends on:** SPEC-01
 
 ## 1. Purpose
 
@@ -23,7 +23,10 @@ uses, token budget, memory event log, memory ON/OFF semantics, seeding.
 - Hindsight's own LLM (used for fact extraction and reflect): Groq,
   `HINDSIGHT_API_LLM_PROVIDER=groq`, key in `HINDSIGHT_API_LLM_API_KEY`.
 - Switchable to Hindsight Cloud by changing `HINDSIGHT_BASE_URL` and `HINDSIGHT_API_KEY` only.
-- Client: `hindsight-client` Python SDK, wrapped in `backend/app/memory.py`.
+- Client: `hindsight-client` Python SDK, wrapped in `backend/app/memory.py`
+  (`Memory` service over a `MemoryBackend`: `HindsightBackend` for real use,
+  `InMemoryBackend` for tests and working without a server). Templates and
+  queries live in `backend/app/memory_text.py`.
   **No other module imports the SDK directly.**
 
 ## 4. Bank design
@@ -107,7 +110,7 @@ e.g. evidence = `invoice RS/2025-26/0412 appeared in the Feb 2026 GSTR-2B, filed
 ```
 {Month YYYY}: Vendor {vendor_name} (GSTIN {gstin}) broke its usual pattern.
 Previously its invoices arrived about {typical_lag} late; now {n} invoice(s)
-are overdue by {days} days. Earlier assumptions about this vendor should not be trusted.
+is/are overdue by {days} days. Earlier assumptions about this vendor should not be trusted.
 ```
 
 ### Retain call
@@ -187,11 +190,15 @@ real pipeline (matcher → agent → decision → retain → self-check) with a
 **simulated accountant** that picks the ground-truth `accountant_action` and types the
 ground-truth `accountant_note`. April is left for the live demo.
 
+> **Implementation note:** seeding needs the agent and the decision flow, so it
+> is built with SPEC-06 (`backend/app/seed.py`). SPEC-04 provides everything it
+> calls: `retain_request`, the templates, and `Memory.retain`.
+
 ## 13. Edge cases
 
 - Hindsight down → reconciliation still works with memory treated as OFF, UI shows a banner; retains are queued in SQLite and replayed later.
 - Recall returns nothing → agent behaves as memory OFF for that group (not an error).
-- Re-deciding a group → same `document_id` (overwrite, not duplicate) — *verify SDK behaviour*.
+- Re-deciding a group → same `document_id`, sent with `update_mode="replace"`: the memory is replaced, not duplicated. A queued older version is replaced too.
 
 ## 14. Acceptance criteria
 
@@ -203,10 +210,27 @@ ground-truth `accountant_note`. April is left for the live demo.
 - AC-04-6: With Hindsight stopped, a reconciliation completes and shows the offline banner.
 - AC-04-7: Recall prompt size for a vendor does not grow beyond `max_tokens` after 4 months (measured).
 
+### How each is checked
+
+| AC | Test |
+|---|---|
+| 04-1 | `test_memory.py::test_only_the_memory_module_imports_the_sdk` |
+| 04-2 | with seeding (SPEC-06), live |
+| 04-3 | `test_memory_live.py::test_ac_04_3_cross_client_recall` (live) |
+| 04-4 | with the reconciliation flow (SPEC-05): retains are created only from exception groups |
+| 04-5 | `test_memory.py::test_every_operation_is_logged` |
+| 04-6 | queue and replay and memory-OFF recall in `test_memory.py`; the banner with SPEC-08 |
+| 04-7 | `test_memory_live.py::test_ac_04_7_recall_stays_within_budget` (live); measured in SPEC-09 |
+
+Live tests are marked `hindsight` and skip when the server isn't reachable.
+
 ## 15. Verify during implementation (unknowns about the SDK)
 
-- Exact shape of recall results (IDs, text, type, score fields).
-- Whether bank *directives* can be set via SDK (else mission text only).
-- Whether retain with an existing `document_id` replaces or appends.
-- Whether recall can filter by `metadata` (we don't depend on it).
-- `delete_bank` availability for resets.
+Answered from the SDK source (hindsight-client 0.10.1):
+
+- ~~Recall result shape~~: `id, text, type, entities, context, occurred_start/end, mentioned_at, document_id, metadata, tags, scores`. We keep id, text, type, date, document_id, metadata.
+- ~~Directives~~: `create_directive` exists. **Not used**: the mission states the ITC rule, and code enforces INV-1, so there is one source of truth.
+- ~~Same `document_id`~~: `retain(update_mode="replace")` replaces (the default); `"append"` also exists.
+- ~~Filtering~~: no metadata filter, but **tags** filter (`tags_match`). Memories are tagged `vendor:<gstin>`, `client:<id>`, `kind:<kind>`; reflect uses `all_strict` for vendor profiles.
+- ~~`delete_bank`~~: available; used by `Memory.reset_bank`.
+- Also: `create_bank` is an HTTP PUT (create or update), so it runs safely on every start.
