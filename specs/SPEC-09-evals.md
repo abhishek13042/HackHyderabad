@@ -4,7 +4,7 @@
 
 ## 1. Purpose
 
-Prove with numbers that **memory makes Munshi better over time**, and that it
+Prove with numbers that **memory makes Recon better over time**, and that it
 stays safe. Output feeds the Insights chart, `docs/EVALS.md`, the README, the
 video and the articles.
 

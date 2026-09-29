@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "munshi"
+name = "recon"
 version = "0.1.0"
 description = "GST ITC reconciliation agent that learns from how a CA firm resolves mismatches, using Hindsight memory."
 readme = "README.md"

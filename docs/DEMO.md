@@ -47,14 +47,14 @@ means that beat can't be filmed as scripted: see §4.
 | Time | Screen | Say (gist) |
 |---|---|---|
 | 0:00–0:20 | Title card → workbench | "Every month, CA firms match thousands of purchase invoices against GSTR-2B. The same vendors cause the same problems, and the knowledge lives in one accountant's head." |
-| 0:20–0:45 | C01 · January; open a card and its note | "Munshi is a reconciliation agent with long-term memory, built on Hindsight. In January it knows nothing. It asks, and it listens." Show a low-confidence card and the accountant's note. |
+| 0:20–0:45 | C01 · January; open a card and its note | "Recon is a reconciliation agent with long-term memory, built on Hindsight. In January it knows nothing. It asks, and it listens." Show a low-confidence card and the accountant's note. |
 | 0:45–1:15 | February → March; memory panel; *Trust board* | "Every decision and note is retained. Each month it checks whether its past advice was right." Show ✓ outcome rows, and Laxmi Packaging reaching Auto. |
 | 1:15–1:45 | C02 · April, *Auto* section; expand cited memories | "April, live. Bhavani Chemicals: deferred automatically, because it's been right before. Laxmi's rounding difference: accepted automatically, the firm's own rule." |
-| 1:45–2:20 | C01 · April, Reddy Steels card | "Reddy Steels looked exactly like Bhavani, until now. Its March invoice never arrived. Munshi noticed its own assumption broke, dropped its trust, and says chase." Show the drift chip, trust reset and vendor message. Choose *Hold payment* with a note, and the retain appears in the memory panel. |
-| 2:20–2:45 | C03 · April → *Run reconciliation*; Krishna Logistics card | "A different client buys from Krishna Logistics. Munshi remembers it never filed for Sri Balaji Textiles, and warns before the credit is lost." Show the cited memory tagged with the other client. |
+| 1:45–2:20 | C01 · April, Reddy Steels card | "Reddy Steels looked exactly like Bhavani, until now. Its March invoice never arrived. Recon noticed its own assumption broke, dropped its trust, and says chase." Show the drift chip, trust reset and vendor message. Choose *Hold payment* with a note, and the retain appears in the memory panel. |
+| 2:20–2:45 | C03 · April → *Run reconciliation*; Krishna Logistics card | "A different client buys from Krishna Logistics. Recon remembers it never filed for Sri Balaji Textiles, and warns before the credit is lost." Show the cited memory tagged with the other client. |
 | 2:45–3:05 | Toggle *Memory* OFF → re-run C03 April | "Same model, same data, memory off: generic, low confidence, and no warning." Then toggle back ON. |
 | 3:05–3:25 | *Insights* | The learning curve ON vs OFF, zero unsafe suggestions, share auto-resolved. Quote one number from the eval report. |
-| 3:25–3:30 | Closing card | "Munshi: it remembers, checks itself, and earns trust." Repo link. |
+| 3:25–3:30 | Closing card | "Recon: it remembers, checks itself, and earns trust." Repo link. |
 
 Notes:
 - Don't make decisions on C03 April before the OFF re-run. Decisions survive a

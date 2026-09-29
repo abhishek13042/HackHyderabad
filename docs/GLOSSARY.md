@@ -1,13 +1,13 @@
 # Glossary
 
-GST terms as Munshi uses them, plus the few words of its own.
+GST terms as Recon uses them, plus the few words of its own.
 
 ## GST
 
 | Term | Meaning |
 |---|---|
 | **GST** | Goods and Services Tax, India's indirect tax on supplies. |
-| **GSTIN** | A 15-character GST registration number: 2-digit state code, the PAN, an entity number, `Z`, and a check character. Munshi validates the check character (`domain/gstin.py`). |
+| **GSTIN** | A 15-character GST registration number: 2-digit state code, the PAN, an entity number, `Z`, and a check character. Recon validates the check character (`domain/gstin.py`). |
 | **ITC** | Input Tax Credit: the GST a business paid on its purchases, which it can set off against the GST it owes on its sales. |
 | **Purchase register** | The business's own books of purchase invoices. |
 | **GSTR-1** | The return in which a *supplier* reports its sales, invoice by invoice. |
@@ -15,7 +15,7 @@ GST terms as Munshi uses them, plus the few words of its own.
 | **GSTR-3B** | The monthly summary return in which the buyer claims ITC and pays tax. |
 | **Reconciliation** | Matching the purchase register against GSTR-2B and resolving the differences before filing GSTR-3B. |
 | **IGST / CGST / SGST** | Integrated GST (between states) versus Central + State GST (within a state). Booking the wrong heads is a *tax-head mismatch*. |
-| **Section 16(2)(aa)** | The rule that ITC is available only if the supplier has reported the invoice (i.e. it is in GSTR-2B). Munshi's INV-1 enforces it in code. |
+| **Section 16(2)(aa)** | The rule that ITC is available only if the supplier has reported the invoice (i.e. it is in GSTR-2B). Recon's INV-1 enforces it in code. |
 | **Section 17(5)** | Blocked credits, such as food and personal-use items. These appear in GSTR-2B marked *ineligible*. |
 | **CA** | Chartered Accountant, usually the one who files for the business and is responsible for it. |
 | **FY** | Financial year, April to March. Invoice numbers often carry it, e.g. `RS/2025-26/0782`. |
@@ -44,7 +44,7 @@ GST terms as Munshi uses them, plus the few words of its own.
 | `BLOCK_ITC` | Don't claim credit for it. |
 | `ESCALATE` | Not sure; a senior should look. |
 
-## Munshi's own words
+## Recon's own words
 
 | Term | Meaning |
 |---|---|

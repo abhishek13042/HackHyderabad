@@ -6,7 +6,7 @@ and run the banned-word check from SPEC-10 AC-10-3 on the final text.
 
 # Teaching an agent to check its own advice
 
-*How we built Munshi, a GST reconciliation agent that remembers what it
+*How we built Recon, a GST reconciliation agent that remembers what it
 suggested last month and finds out whether it was right.*
 
 Every month, a Chartered Accountant in India does the same tedious job for each
@@ -29,7 +29,7 @@ whether it could tell when its own knowledge had gone stale.
 
 ## The loop
 
-Munshi runs the same loop every month for each client:
+Recon runs the same loop every month for each client:
 
 1. **Match** the books against GSTR-2B. This is plain code, deterministic and
    tested. We don't let a language model near the arithmetic.
@@ -48,14 +48,14 @@ Step 2 is the one we care about most.
 
 ## Advice you can check
 
-Most agent memory records *what happened*. Munshi also records *whether it worked*.
+Most agent memory records *what happened*. Recon also records *whether it worked*.
 
 When the accountant defers Reddy Steels' February invoices, that decision goes into
 memory (we use [Hindsight](https://github.com/vectorize-io/hindsight)) as a plain
 English sentence:
 
 > February 2026: At client Sri Balaji Textiles, vendor Reddy Steels had 2 invoices
-> missing from GSTR-2B, ITC at risk ₹53,402.04. Munshi suggested DEFER. The
+> missing from GSTR-2B, ITC at risk ₹53,402.04. Recon suggested DEFER. The
 > accountant accepted it. Accountant's note: "Jan invoice showed up in Feb 2B.
 > They're just late. Deferring."
 
@@ -72,7 +72,7 @@ weights. We never fine-tune. **The model stays the same; the memory grows.**
 ## Earning trust, and losing it
 
 A pattern that keeps getting the same decision, with outcomes that confirm it, climbs
-a ladder: **Observe → Suggest → Auto**. At Auto, Munshi resolves the case itself and
+a ladder: **Observe → Suggest → Auto**. At Auto, Recon resolves the case itself and
 shows it in its own section, where the accountant can undo it with a note.
 
 The rules are in code, not in the prompt:
@@ -89,12 +89,12 @@ The rules are in code, not in the prompt:
 Here is the case we built the whole project around.
 
 Reddy Steels files a month late: January's invoice arrives in February, February's
-in March. By April, Munshi has two verified-correct deferrals, and deferring Reddy
+in March. By April, Recon has two verified-correct deferrals, and deferring Reddy
 looks exactly like deferring Bhavani Chemicals, another late filer.
 
 But Reddy's March invoice never arrives in April's 2B.
 
-An agent that only remembers would defer again: that's what the history says. Munshi
+An agent that only remembers would defer again: that's what the history says. Recon
 does three things instead:
 
 1. The self-check writes *"the decision to DEFER was wrong"*.
@@ -139,6 +139,3 @@ works. It says nothing yet about a real firm's books.
 
 The code, the specs and the evaluation are open: [REPO LINK]. The demo video is
 here: [VIDEO LINK].
-
-*Munshi means "clerk" or "accountant" in Hindi and Urdu, the person who kept the
-books and remembered who paid late.*

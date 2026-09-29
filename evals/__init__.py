@@ -1,4 +1,4 @@
-"""Evaluation harness (SPEC-09): does memory make Munshi's suggestions better over time?
+"""Evaluation harness (SPEC-09): does memory make Recon's suggestions better over time?
 
     python -m evals.run --conditions on,off --seed 42     # runs, then writes the report
     python -m evals.report evals/results/<run_id>         # re-scores saved results

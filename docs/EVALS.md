@@ -1,12 +1,12 @@
 # Evaluation
 
-Does memory make Munshi's suggestions better over time, and does it stay safe while
+Does memory make Recon's suggestions better over time, and does it stay safe while
 doing so? This page covers the method; each run's numbers are in its own
 `evals/results/<run_id>/report.md`. The spec is [SPEC-09](../specs/SPEC-09-evals.md).
 
 > **Honesty first.** The data is synthetic, and its vendor behaviours are planted on
 > purpose (SPEC-02) so that learning can be measured against a known ground truth.
-> A good score shows that the learning loop works. It does not show how Munshi would
+> A good score shows that the learning loop works. It does not show how Recon would
 > do on a real firm's books. April is held out: the prompt was tuned on January to
 > March only.
 

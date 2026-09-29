@@ -28,7 +28,7 @@ attrs==26.1.0
 click==8.5.0
     # via uvicorn
 fastapi==0.141.1
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 frozenlist==1.8.0
     # via
     #   aiohttp
@@ -38,7 +38,7 @@ h11==0.16.0
     #   httpcore2
     #   uvicorn
 hindsight-client==0.10.1
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 httpcore2==2.13.1
     # via httpx2
 httpx2==2.13.1
@@ -55,7 +55,7 @@ multidict==6.9.1
     #   aiohttp
     #   yarl
 openai==3.19.2
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 propcache==0.5.4
     # via
     #   aiohttp
@@ -64,19 +64,19 @@ pydantic==2.13.5
     # via
     #   fastapi
     #   hindsight-client
-    #   munshi (pyproject.toml)
+    #   recon (pyproject.toml)
     #   openai
     #   pydantic-settings
 pydantic-core==2.46.5
     # via pydantic
 pydantic-settings==2.15.0
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via hindsight-client
 python-dotenv==1.2.3
     # via pydantic-settings
 python-multipart==0.0.32
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 six==1.17.0
     # via python-dateutil
 sniffio==1.3.1
@@ -108,6 +108,6 @@ typing-inspection==0.4.4
 urllib3==2.8.0
     # via hindsight-client
 uvicorn==0.54.0
-    # via munshi (pyproject.toml)
+    # via recon (pyproject.toml)
 yarl==1.25.1
     # via aiohttp

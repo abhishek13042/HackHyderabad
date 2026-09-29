@@ -67,8 +67,8 @@ export const GUARDRAIL_LABELS: Record<string, string> = {
 };
 
 export const TRUST_LABELS: Record<TrustLevel, { label: string; tone: Tone; hint: string }> = {
-  0: { label: "Observe", tone: "grey", hint: "Munshi suggests; you decide every case." },
-  1: { label: "Suggest", tone: "blue", hint: "Munshi's suggestion has been right repeatedly." },
+  0: { label: "Observe", tone: "grey", hint: "Recon suggests; you decide every case." },
+  1: { label: "Suggest", tone: "blue", hint: "Recon's suggestion has been right repeatedly." },
   2: { label: "Auto", tone: "green", hint: "Proven pattern: resolved automatically, you can undo." },
 };
 

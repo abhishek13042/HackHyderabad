@@ -11,12 +11,12 @@ GSTR-2B. Matching is solved. What isn't solved is *remembering*: which vendor fi
 late but reliably, which one never files, which ₹6 differences the firm always
 accepts. That knowledge sits in one senior accountant's head.
 
-We built **Munshi**, a reconciliation agent with long-term memory (on Hindsight). It
+We built **Recon**, a reconciliation agent with long-term memory (on Hindsight). It
 remembers every decision and the accountant's note. The next month, it checks
 whether its own advice was right.
 
 The part I'm proudest of: a vendor that always filed a month late suddenly stops. An
-agent that only remembers would say "defer, they're always late". Munshi notices
+agent that only remembers would say "defer, they're always late". Recon notices
 that its own assumption broke. It drops its trust in that pattern and says chase.
 
 On our synthetic benchmark (same model, memory on vs off), accuracy in the held-out
@@ -36,7 +36,7 @@ The model never changes. The memory does.
 Giving an AI agent long-term memory is easy. Deciding what it should *not* remember
 is the hard part.
 
-For **Munshi**, our GST reconciliation agent, we store only three things: how a
+For **Recon**, our GST reconciliation agent, we store only three things: how a
 problem was resolved, whether that turned out to be right, and when a vendor changed
 its behaviour. We don't store clean invoices (about 85% of rows), raw files, or
 ignored suggestions.
@@ -78,7 +78,7 @@ accounting problem; ask for feedback, don't sell).
 > is easy. Remembering how each vendor behaves isn't, and it lives in one person's
 > head.
 >
-> Munshi is an agent with long-term memory (Hindsight) that remembers each decision
+> Recon is an agent with long-term memory (Hindsight) that remembers each decision
 > and note, checks the next month whether it was right, earns autonomy per vendor
 > pattern, and notices when a vendor breaks its pattern (a late filer who stops
 > filing). Matching and all tax rules are plain code; the model only suggests, and

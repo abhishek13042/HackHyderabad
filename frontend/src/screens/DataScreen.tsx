@@ -42,7 +42,7 @@ function SampleData() {
     <Panel title="Sample data">
       <p className="mb-3 text-sm text-stone-600">
         Three fictional clients of a CA firm over four months (Jan–Apr 2026). Loading replays January to March with a
-        simulated accountant, so Munshi starts April with three months of memory.
+        simulated accountant, so Recon starts April with three months of memory.
       </p>
       {job ? (
         <ProgressBar done={job.done} total={job.total} label={`Replaying history${job.result["last"] ? ` · ${String(job.result["last"])}` : ""}`} />

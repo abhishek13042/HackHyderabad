@@ -1,4 +1,4 @@
-// S3: what Munshi knows about one vendor, month by month across clients.
+// S3: what Recon knows about one vendor, month by month across clients.
 
 import { useVendor } from "../api/hooks";
 import type { HistoryRow, Vendor } from "../api/types";
@@ -43,7 +43,7 @@ function Profile({ vendor, clientName }: { vendor: Vendor; clientName: (id: stri
         )}
       </header>
 
-      <Panel title="What Munshi knows">
+      <Panel title="What Recon knows">
         {vendor.profile ? (
           <p className="whitespace-pre-line text-sm leading-relaxed text-stone-700">{vendor.profile}</p>
         ) : (

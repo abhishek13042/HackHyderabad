@@ -1,10 +1,10 @@
 # Research behind the design
 
-Munshi is a small product. Each idea below comes from published work, and each
+Recon is a small product. Each idea below comes from published work, and each
 row says what we took from it and where it shows up in the code. We cite these
 for design reasoning. We don't claim to reproduce their results.
 
-| Work | The idea | What Munshi does with it |
+| Work | The idea | What Recon does with it |
 |---|---|---|
 | **Hindsight** (Vectorize; [arXiv 2512.12818](https://arxiv.org/abs/2512.12818)) | Agent memory as separate networks: world facts, the agent's experiences, observations about entities, and opinions, built through retain, recall and reflect. | We write facts and experiences only (resolutions, outcomes, drift) and let Hindsight form observations about each vendor. Recall asks for all three networks at once. See [HINDSIGHT_USAGE.md](HINDSIGHT_USAGE.md). |
 | **Reflexion** (Shinn et al., 2023) | Agents improve by storing verbal feedback about their own mistakes in memory, without changing the model's weights. | The core bet: *the model doesn't learn, the memory does.* The self-check writes "the decision to DEFER was wrong" back to memory. This is also why we don't fine-tune (D1). |

@@ -26,8 +26,8 @@ export function TopBar() {
     <div className="border-b border-stone-200 bg-white">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5">
         <a href="#/workbench" className="flex items-center gap-2 font-semibold text-stone-900">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-accent-700 text-sm text-white">M</span>
-          Munshi
+          <span className="grid h-7 w-7 place-items-center rounded-md bg-accent-700 text-sm text-white">R</span>
+          Recon
           {health.data && <span className="hidden font-normal text-stone-500 sm:inline">· {health.data.firm}</span>}
         </a>
 
@@ -97,7 +97,7 @@ export function TopBar() {
 
       {health.isError && (
         <div className="px-4 pb-2">
-          <Banner tone="red">Can't reach the Munshi server. Start it with uvicorn on port 8000.</Banner>
+          <Banner tone="red">Can't reach the Recon server. Start it with uvicorn on port 8000.</Banner>
         </div>
       )}
       {memoryDown && (
@@ -117,8 +117,8 @@ export function TopBar() {
             </h2>
             <p className="mt-2 text-sm text-stone-600">
               {memoryOn
-                ? "Munshi will suggest as if it had never seen this firm: no memories and nothing resolved automatically. Your decisions are kept."
-                : "Munshi will recall what it has learned again. Your decisions are kept."}
+                ? "Recon will suggest as if it had never seen this firm: no memories and nothing resolved automatically. Your decisions are kept."
+                : "Recon will recall what it has learned again. Your decisions are kept."}
             </p>
             <div className="mt-4 flex justify-end gap-2">
               <Button onClick={() => setConfirming(false)}>Cancel</Button>

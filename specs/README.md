@@ -1,6 +1,6 @@
-# Munshi — Specifications
+# Recon — Specifications
 
-Munshi is a GST reconciliation agent for small CA firms. It matches purchase
+Recon is a GST reconciliation agent for small CA firms. It matches purchase
 registers against GSTR-2B, remembers how every mismatch was resolved (via
 Hindsight), checks whether its own past advice was right, and earns autonomy
 only where it has proven itself.

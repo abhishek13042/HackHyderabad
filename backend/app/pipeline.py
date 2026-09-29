@@ -6,7 +6,7 @@ Steps 1 to 4 are deterministic code over SQLite; what they learn is retained
 to memory so the agent can reason about it in plain English. Periods of a
 client run in order, and only the latest one can be run again.
 
-Memory OFF changes what the agent sees and forbids auto-resolution. Munshi
+Memory OFF changes what the agent sees and forbids auto-resolution. Recon
 still records decisions, outcomes and drift, so a later run with memory ON
 knows everything that happened.
 """

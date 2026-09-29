@@ -104,7 +104,7 @@ April 2B, absent). Bhavani Chemicals never drifts.
 - A group is auto-resolved iff trust level 2 **and** the suggestion's action equals
   the pattern's `streak_action` **and** no guardrail fired **and** memory ON.
 - Creates `Decision(decided_by=AUTO, accepted_suggestion=true)` and retains M1
-  with "Munshi auto-resolved this (trust level 2)".
+  with "Recon auto-resolved this (trust level 2)".
 - **Undo** (UI): converts it to an accountant override → retains M1 as an override →
   counts toward `wrong_recent` (drops the pattern to level 0).
 

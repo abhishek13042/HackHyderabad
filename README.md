@@ -1,4 +1,4 @@
-# Munshi
+# Recon
 
 **A GST reconciliation agent that remembers how your firm resolves mismatches — and checks whether its own advice was right.**
 
@@ -47,9 +47,9 @@ clients. She spends the first ten days of every month reconciling and chasing
 vendors. She is legally responsible for what she files, so she won't hand
 decisions to a black box.
 
-## What Munshi does
+## What Recon does
 
-> Big GST tools match invoices. Munshi remembers how your firm resolves them,
+> Big GST tools match invoices. Recon remembers how your firm resolves them,
 > checks whether its advice was right, and handles next month's exceptions the
 > way your best accountant would.
 
@@ -79,7 +79,7 @@ Numbers: the newest `evals/results/<run_id>/report.md` ([RESULTS_LINK]).
 | [docs/EVALS.md](docs/EVALS.md) | Evaluation method and metrics |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Design decisions log |
 | [docs/RESEARCH.md](docs/RESEARCH.md) | Papers behind the design, and what we chose not to do |
-| [docs/GLOSSARY.md](docs/GLOSSARY.md) | GST terms and Munshi's own vocabulary |
+| [docs/GLOSSARY.md](docs/GLOSSARY.md) | GST terms and Recon's own vocabulary |
 | [docs/DEMO.md](docs/DEMO.md) | Demo runbook and video script |
 | [specs/](specs/README.md) | The specs SPEC-00 … SPEC-10 |
 

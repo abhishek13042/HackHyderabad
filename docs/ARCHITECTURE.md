@@ -1,6 +1,6 @@
 # Architecture
 
-Munshi splits the work in two. **Code does the numbers**: matching, checking past
+Recon splits the work in two. **Code does the numbers**: matching, checking past
 decisions, trust and drift are deterministic and tested. **The model does the
 judgment**: one short, structured suggestion per exception group, grounded in
 recalled memory and checked by guardrails before anyone sees it (D2).
@@ -26,7 +26,7 @@ recalled memory and checked by guardrails before anyone sees it (D2).
 ## The loop that makes it learn
 
 1. **Decide.** The accountant accepts or overrides a suggestion. An override needs a
-   note, because it is the most useful thing Munshi can remember. The decision is
+   note, because it is the most useful thing Recon can remember. The decision is
    retained as a plain-English *resolution* memory (M1).
 2. **Check.** Next month, step 2 looks at what really happened. Did the deferred
    invoice arrive in GSTR-2B? The verdict is retained as an *outcome* memory (M2):

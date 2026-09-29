@@ -66,7 +66,7 @@ export function MemoryPanel() {
     <aside aria-label="Memory activity" className="flex h-full flex-col border-l border-stone-200 bg-white">
       <header className="flex items-center justify-between border-b border-stone-100 px-3 py-2.5">
         <h2 className="text-sm font-semibold text-stone-700">
-          Munshi's memory, live
+          Recon's memory, live
           {busy && <span className="ml-2 inline-block h-2 w-2 animate-pulse rounded-full bg-accent-600" aria-label="live" />}
         </h2>
         <button
@@ -80,7 +80,7 @@ export function MemoryPanel() {
       </header>
       {!collapsed && (
         <p className="border-b border-stone-100 bg-stone-50 px-3 py-2 text-xs text-stone-500">
-          Every time Munshi looks up a vendor's history or learns from a decision, it shows here. Stored in
+          Every time Recon looks up a vendor's history or learns from a decision, it shows here. Stored in
           Hindsight, so it lasts from month to month.
         </p>
       )}
@@ -88,7 +88,7 @@ export function MemoryPanel() {
         <ol className="flex-1 divide-y divide-stone-100 overflow-y-auto text-xs" aria-live="polite">
           {newest.length === 0 && (
             <li className="px-3 py-6 text-center text-stone-500">
-              {query.isError ? "Can't reach the server." : "Nothing yet. Run a reconciliation to watch Munshi recall and learn."}
+              {query.isError ? "Can't reach the server." : "Nothing yet. Run a reconciliation to watch Recon recall and learn."}
             </li>
           )}
           {newest.map((event) => {

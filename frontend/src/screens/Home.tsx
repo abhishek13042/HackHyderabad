@@ -1,4 +1,4 @@
-// S0: the front door. Says in plain words what Munshi is, how it works, and walks
+// S0: the front door. Says in plain words what Recon is, how it works, and walks
 // a first-time viewer through the four moments that show memory at work.
 
 import { useQuery } from "@tanstack/react-query";
@@ -26,8 +26,8 @@ const MOMENTS: Moment[] = [
     clientId: "C02",
     period: "2026-04",
     memoryOn: true,
-    what: "Bhavani Chemicals always files its GST returns a few weeks late. Munshi said “wait a month” twice, checked, and was right both times.",
-    look: "Open the green “Auto-resolved” box at the bottom: Munshi handled it without asking, and you can still undo it.",
+    what: "Bhavani Chemicals always files its GST returns a few weeks late. Recon said “wait a month” twice, checked, and was right both times.",
+    look: "Open the green “Auto-resolved” box at the bottom: Recon handled it without asking, and you can still undo it.",
   },
   {
     n: 2,
@@ -36,7 +36,7 @@ const MOMENTS: Moment[] = [
     period: "2026-04",
     memoryOn: true,
     what: "Reddy Steels also used to file late and always caught up. This month its invoice is overdue for longer than ever before.",
-    look: "The Reddy Steels card has a red “Pattern changed” tag: Munshi stops saying “wait” and says “chase the vendor”.",
+    look: "The Reddy Steels card has a red “Pattern changed” tag: Recon stops saying “wait” and says “chase the vendor”.",
   },
   {
     n: 3,
@@ -53,7 +53,7 @@ const MOMENTS: Moment[] = [
     clientId: "C03",
     period: "2026-04",
     memoryOn: false,
-    what: "The same month, run as if Munshi had never met this firm.",
+    what: "The same month, run as if Recon had never met this firm.",
     look: "No warnings, nothing handled for you: every case is back on your desk. That gap is what memory is worth.",
   },
 ];
@@ -94,13 +94,13 @@ export function Home() {
       <section className="overflow-hidden rounded-2xl bg-gradient-to-br from-accent-800 via-accent-700 to-emerald-600 px-6 py-8 text-white shadow-lg sm:px-10 sm:py-10">
         <p className="text-sm font-medium tracking-wide text-accent-100 uppercase">For CA firms in India</p>
         <h1 className="mt-2 text-3xl leading-tight font-bold sm:text-4xl">
-          Munshi: the GST clerk that remembers.
+          Recon: GST reconciliation that remembers.
         </h1>
         <p className="mt-4 max-w-2xl text-base text-accent-50 sm:text-lg">
           Every month, a CA firm has to check each client's purchase invoices against{" "}
           <strong>GSTR-2B</strong>, the list the government builds from what vendors reported. Anything
           that doesn't match puts the client's tax credit at risk. Juniors investigate the same vendors
-          every month and forget what they learned. <strong>Munshi remembers</strong>, so the firm gets
+          every month and forget what they learned. <strong>Recon remembers</strong>, so the firm gets
           better every month.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
@@ -162,7 +162,7 @@ export function Home() {
         <h2 className="text-xl font-semibold text-stone-900">See it in four moments</h2>
         <p className="mt-1 text-sm text-stone-600">
           The sample firm has three months of history (January to March 2026). Each button opens April, the
-          month Munshi is working on now. If a month hasn't been run yet, it runs live, which takes about a minute.
+          month Recon is working on now. If a month hasn't been run yet, it runs live, which takes about a minute.
         </p>
         <div className="mt-4 space-y-3">
           {MOMENTS.map((m) => (
@@ -190,11 +190,11 @@ export function Home() {
         <h2 className="font-semibold text-stone-900">Reading the screen</h2>
         <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <Term t="ITC at risk">Tax credit the client can't claim until the mismatch is fixed.</Term>
-          <Term t="Card">One vendor's mismatches for the month, with Munshi's suggestion and why.</Term>
-          <Term t="Memory panel (right)">Every time Munshi looks something up or learns something, live.</Term>
+          <Term t="Card">One vendor's mismatches for the month, with Recon's suggestion and why.</Term>
+          <Term t="Memory panel (right)">Every time Recon looks something up or learns something, live.</Term>
           <Term t="Memory switch (top)">Re-runs the month without memory, so you can compare.</Term>
-          <Term t="Observe → Suggest → Auto">How much Munshi is trusted with a pattern, earned month by month.</Term>
-          <Term t="Insights">Whether Munshi's advice is getting better over time.</Term>
+          <Term t="Observe → Suggest → Auto">How much Recon is trusted with a pattern, earned month by month.</Term>
+          <Term t="Insights">Whether Recon's advice is getting better over time.</Term>
         </dl>
       </section>
     </div>

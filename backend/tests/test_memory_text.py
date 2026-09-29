@@ -1,4 +1,4 @@
-"""SPEC-04 §6 to §8: what Munshi writes to memory, and what it asks."""
+"""SPEC-04 §6 to §8: what Recon writes to memory, and what it asks."""
 
 from datetime import date
 from decimal import Decimal
@@ -63,12 +63,12 @@ def test_resolution_names_everything_recall_needs() -> None:
 
 def test_override_is_explicit() -> None:
     text = resolution(final_action=Action.CHASE_VENDOR, note="They always file late").text()
-    assert "Munshi suggested DEFER.\nThe accountant overrode it and chose CHASE_VENDOR." in text
+    assert "Recon suggested DEFER.\nThe accountant overrode it and chose CHASE_VENDOR." in text
     assert text.endswith('Accountant\'s note: "They always file late"')
 
 
 def test_memory_off_suggestion() -> None:
-    assert "Munshi suggested nothing (memory off)." in resolution(suggested_action=None).text()
+    assert "Recon suggested nothing (memory off)." in resolution(suggested_action=None).text()
 
 
 def test_automatic_resolution() -> None:

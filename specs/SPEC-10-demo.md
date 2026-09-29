@@ -21,14 +21,14 @@ event or call it a competition** anywhere in this content (see AC-10-3).
 | Time | Screen | Say (gist) |
 |---|---|---|
 | 0:00–0:20 | Title card → workbench | "Every month, CA firms match thousands of purchase invoices against GSTR-2B. The same vendors cause the same problems — and the knowledge lives in one accountant's head." |
-| 0:20–0:45 | Data screen, Jan run | "Munshi is a reconciliation agent with long-term memory, built on Hindsight. January: it knows nothing. It asks, and it listens." Show a low-confidence card + accountant note. |
+| 0:20–0:45 | Data screen, Jan run | "Recon is a reconciliation agent with long-term memory, built on Hindsight. January: it knows nothing. It asks, and it listens." Show a low-confidence card + accountant note. |
 | 0:45–1:15 | Feb → Mar quickly; memory panel | "Every decision and note is retained. Every month, it checks whether its past advice was right." Show ✓ outcome rows, Laxmi Packaging going to Auto. |
 | 1:15–1:45 | April workbench | "April, live. Bhavani Chemicals: auto-deferred — it's been right twice. Laxmi's ₹6 rounding: auto-accepted, the firm's own rule." Expand cited memories. |
-| 1:45–2:20 | Reddy Steels card | "Reddy Steels looked exactly like Bhavani — until now. Its March invoice never arrived. Munshi noticed its own assumption broke, dropped its trust, and says chase." Show drift chip, trust reset, vendor message. Accountant chooses Hold payment + note → retain appears. |
-| 2:20–2:45 | C03 · April, run live · Krishna Logistics card | "A different client buys from Krishna Logistics. Munshi remembers it never filed for Sri Balaji Textiles — warns before the loss." Show the cited memory tagged with the other client. |
+| 1:45–2:20 | Reddy Steels card | "Reddy Steels looked exactly like Bhavani — until now. Its March invoice never arrived. Recon noticed its own assumption broke, dropped its trust, and says chase." Show drift chip, trust reset, vendor message. Accountant chooses Hold payment + note → retain appears. |
+| 2:20–2:45 | C03 · April, run live · Krishna Logistics card | "A different client buys from Krishna Logistics. Recon remembers it never filed for Sri Balaji Textiles — warns before the loss." Show the cited memory tagged with the other client. |
 | 2:45–3:05 | Toggle memory OFF, re-run C03 April | "Same model, memory off: generic, low-confidence, no warning." Toggle back ON. (No decisions on C03 before this: they survive a re-run, D27.) |
 | 3:05–3:25 | Insights | Learning curve ON vs OFF, 0 unsafe suggestions, % auto-resolved. |
-| 3:25–3:30 | Closing | "Munshi: it remembers, checks itself, and earns trust." Repo link. |
+| 3:25–3:30 | Closing | "Recon: it remembers, checks itself, and earns trust." Repo link. |
 
 Record voice separately if needed; cut with any free editor. Upload to YouTube (unlisted or public as required), add chapters.
 

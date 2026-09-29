@@ -1,4 +1,4 @@
-// One exception group: what is wrong, what Munshi suggests and why, and the
+// One exception group: what is wrong, what Recon suggests and why, and the
 // accountant's decision (SPEC-08 S2).
 
 import { forwardRef, useState, type KeyboardEvent } from "react";
@@ -143,7 +143,7 @@ const OpenCard = forwardRef<
           <>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="text-sm">
-                <span className="text-stone-500">Munshi suggests: </span>
+                <span className="text-stone-500">Recon suggests: </span>
                 <span className="font-semibold uppercase tracking-wide text-accent-800">
                   {ACTION_LABELS[suggestion.action]}
                 </span>
@@ -225,7 +225,7 @@ const OpenCard = forwardRef<
         </label>
         {needsNote && (
           <p id={`note-help-${group.group_key}`} className="text-xs text-red-700">
-            A note is required when you choose differently. It becomes Munshi's memory for next month.
+            A note is required when you choose differently. It becomes Recon's memory for next month.
           </p>
         )}
         {decide.isError && (

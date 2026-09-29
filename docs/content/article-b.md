@@ -9,7 +9,7 @@ and run the banned-word check from SPEC-10 AC-10-3 on the final text.
 *The hardest part of giving an agent long-term memory wasn't storing things. It was
 deciding what not to store.*
 
-We built Munshi, an agent that helps Chartered Accountants in India with a monthly
+We built Recon, an agent that helps Chartered Accountants in India with a monthly
 chore: reconciling a client's purchase invoices against GSTR-2B, the government's
 list of what suppliers actually reported. Every mismatch means tax credit at risk,
 and resolving one well depends on history. Who files late? Who never files? Which
@@ -26,11 +26,11 @@ A client-month has hundreds of invoices, and about 85% of them match cleanly. Th
 teach nothing. The raw files are already in a database. Suggestions nobody acted on
 carry no signal.
 
-So Munshi retains exactly three kinds of memory:
+So Recon retains exactly three kinds of memory:
 
 | Kind | When |
 |---|---|
-| **Resolution** | The accountant decides a group of exceptions, or Munshi does automatically |
+| **Resolution** | The accountant decides a group of exceptions, or Recon does automatically |
 | **Outcome** | Next month shows whether that decision was right, or a late invoice finally arrives |
 | **Drift** | A vendor breaks its usual pattern |
 
@@ -47,7 +47,7 @@ full, self-contained English sentences, not JSON blobs:
 
 > February 2026: At client Sri Balaji Textiles, vendor Reddy Steels (GSTIN
 > 36AABCR1234F1ZT) had 2 invoices missing from GSTR-2B, ITC at risk ₹53,402.04.
-> Munshi suggested DEFER. The accountant accepted it. Accountant's note: "Jan
+> Recon suggested DEFER. The accountant accepted it. Accountant's note: "Jan
 > invoice showed up in Feb 2B. They're just late. Deferring."
 
 Every memory names the vendor, its GSTIN and the client in full. It carries the
@@ -71,7 +71,7 @@ vendor never filed for one client, that is exactly what you want to know when it
 turns up at another.
 
 With one bank for the firm, the same recall that finds *this* client's history finds
-the others' too. That is how Munshi warns a new client about Krishna Logistics
+the others' too. That is how Recon warns a new client about Krishna Logistics
 before the credit is lost. A code guardrail makes sure the warning cites a real
 memory from another client: no citation, no warning.
 
@@ -85,7 +85,7 @@ in what you need. *Lost in the Middle* (Liu et al., 2023) showed that models ove
 information buried in long contexts. So more history can make the answers worse, not
 just more expensive.
 
-Munshi asks **one question per exception group**:
+Recon asks **one question per exception group**:
 
 > How were invoices missing from GSTR-2B from vendor Reddy Steels (GSTIN
 > 36AABCR1234F1ZT) handled before, at any client, and what happened afterwards? How
@@ -115,7 +115,7 @@ and a monthly summary. Both are cached until the next retain.
 ## Rule 6: forgetting is a feature
 
 Memory that only accumulates will eventually be confidently wrong. One of our planted
-vendors files a month late, reliably, until it stops. When that happens, Munshi
+vendors files a month late, reliably, until it stops. When that happens, Recon
 writes a *drift* memory that says, in so many words, "earlier assumptions about this
 vendor should not be trusted". Trust in that pattern resets, and a guardrail stops
 deferral. Hindsight's recall now surfaces the warning alongside the old history.

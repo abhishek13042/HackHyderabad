@@ -49,7 +49,7 @@ def create_app(services: Services | None = None) -> FastAPI:
             svc.close()
 
     app = FastAPI(
-        title="Munshi API",
+        title="Recon API",
         description="GST input tax credit reconciliation that learns from the accountant.",
         version="0.1.0",
         lifespan=lifespan,

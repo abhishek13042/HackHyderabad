@@ -4,7 +4,7 @@
 
 ## 1. Purpose
 
-Define what Munshi is, who it is for, and what "success" means, so every other
+Define what Recon is, who it is for, and what "success" means, so every other
 spec can be checked against it.
 
 ## 2. Problem
@@ -28,7 +28,7 @@ head and is lost when they leave or are busy.
 
 ## 4. Value proposition
 
-> Big GST tools match invoices. Munshi remembers how your firm resolves them,
+> Big GST tools match invoices. Recon remembers how your firm resolves them,
 > checks whether its advice was right, and handles next month's exceptions the
 > way your best accountant would.
 
@@ -95,7 +95,7 @@ Targets are hypotheses we test; the article and README report whatever the evals
 
 ## 10. Open questions
 
-- ~~Q1: Product name "Munshi"?~~ Approved.
+- ~~Q1: Product name "Recon"?~~ Approved.
 - ~~Q2: Fictional firm/persona names?~~ Approved.
 
 AC-00-1 → [TRACEABILITY.md](TRACEABILITY.md). AC-00-3 → root `README.md`.
@@ -107,6 +107,6 @@ AC-00-2 is checked at every review.
 - AC-00-2: no login, portal/Tally integration, OCR, return filing, message sending, or
   non-B2B documents. Ingest rejects reverse-charge rows (`rev` must be `N`), and
   vendor messages are drafts only.
-- AC-00-3: the README's *The problem*, *Who it's for* and *What Munshi does* sections
+- AC-00-3: the README's *The problem*, *Who it's for* and *What Recon does* sections
   follow §2–§4.
 - §7 metrics are measured by SPEC-09, and the results are reported as they come out.

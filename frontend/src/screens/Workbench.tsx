@@ -5,6 +5,7 @@ import { useRef, type KeyboardEvent } from "react";
 import { useGroups, useRun } from "../api/hooks";
 import type { Group } from "../api/types";
 import { ExceptionCard } from "../components/ExceptionCard";
+import { RunLive } from "../components/RunLive";
 import { UndoForm } from "../components/UndoForm";
 import { Banner, Button, Empty, ErrorBox, ProgressBar, Skeleton } from "../components/ui";
 import { periodLabel, rupees, sumMoney } from "../lib/format";
@@ -71,7 +72,7 @@ export function Workbench() {
           </h1>
           {!hasRun && (
             <p className="text-sm text-stone-600">
-              Munshi compares this client's purchase books with GSTR-2B and brings you only what doesn't match.
+              Recon compares this client's purchase books with GSTR-2B and brings you only what doesn't match.
             </p>
           )}
           {hasRun && (
@@ -93,11 +94,14 @@ export function Workbench() {
       </div>
 
       {runningHere && activeRun && (
-        <ProgressBar
-          done={activeRun.progress.done}
-          total={activeRun.progress.total}
-          label={STEP_LABELS[activeRun.progress.step ?? ""] ?? "Starting"}
-        />
+        <>
+          <ProgressBar
+            done={activeRun.progress.done}
+            total={activeRun.progress.total}
+            label={STEP_LABELS[activeRun.progress.step ?? ""] ?? "Starting"}
+          />
+          <RunLive run={activeRun} />
+        </>
       )}
       {ws.runError && (
         <ErrorBox error={new Error(ws.runError)} onRetry={ws.clearRunError} />
@@ -114,7 +118,7 @@ export function Workbench() {
           {periodRow?.has_2b ? (
             <div className="space-y-4">
               <p>
-                Press the button and watch: Munshi matches the invoices, looks up each problem vendor in its
+                Press the button and watch: Recon matches the invoices, looks up each problem vendor in its
                 memory (right-hand panel), and suggests what to do. It takes about a minute.
               </p>
               <Button variant="primary" disabled={ws.busy} onClick={() => void ws.startRun(clientId, period, true)}>
@@ -160,7 +164,7 @@ function AutoSection({ groups }: { groups: Group[] }) {
   return (
     <details open className="rounded-lg border border-emerald-200 bg-emerald-50/40">
       <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium text-emerald-800">
-        Handled automatically ({groups.length}): Munshi has been proven right on these, so it didn't ask you
+        Handled automatically ({groups.length}): Recon has been proven right on these, so it didn't ask you
       </summary>
       <ul className="divide-y divide-emerald-100 border-t border-emerald-100">
         {groups.map((g) => {

@@ -5,7 +5,7 @@
 ## 1. Purpose
 
 A focused workbench where an accountant clears a month's mismatches fast, and
-where **the memory is visible**: what Munshi recalled, why it suggests something,
+where **the memory is visible**: what Recon recalled, why it suggests something,
 how much it trusts itself, and what it just learned. This is the UX 15% and it
 carries most of the demo video.
 
@@ -20,7 +20,7 @@ carries most of the demo video.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│ Munshi · Rao & Associates   [Client ▾ C01] [Period ▾ Apr 2026]  Memory ●ON  │
+│ Recon · Rao & Associates   [Client ▾ C01] [Period ▾ Apr 2026]  Memory ●ON  │
 ├───────────┬────────────────────────────────────────────────┬─────────────────┤
 │ Nav       │  Main screen                                   │ Memory activity │
 │ Workbench │                                                │ (live panel)    │
@@ -48,7 +48,7 @@ Header: `ITC at risk ₹84,500 · 7 groups · 2 auto-resolved · 5 need you` and
 │ Reddy Steels  36AABCR1234F1Z5         Missing from GSTR-2B   ₹27,000    │
 │ 2 invoices ▸                                        ⚠ Pattern changed   │
 │─────────────────────────────────────────────────────────────────────────│
-│ Munshi suggests:  CHASE VENDOR            Confidence: Medium            │
+│ Recon suggests:  CHASE VENDOR            Confidence: Medium            │
 │ "Reddy Steels usually files a month late, but its March invoice still   │
 │  hasn't appeared in April's 2B. The pattern has broken — chase now."    │
 │                                                                         │
@@ -73,7 +73,7 @@ Header: `ITC at risk ₹84,500 · 7 groups · 2 auto-resolved · 5 need you` and
 ### S3 — Vendor profile
 Opened by clicking a vendor name.
 - Header: name, GSTIN, state, status, clients buying from it.
-- **What Munshi knows** — reflect profile text (cached), with "last updated from N memories".
+- **What Recon knows** — reflect profile text (cached), with "last updated from N memories".
 - **Timeline** — month rows × client: exception type, action taken, outcome (✓ correct / ✗ wrong / —), drift marker.
 - **Trust per issue type** — small ladder graphic 0→1→2 with the current step highlighted.
 

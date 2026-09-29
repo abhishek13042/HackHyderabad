@@ -1,4 +1,4 @@
-"""Munshi's long-term memory (SPEC-04).
+"""Recon's long-term memory (SPEC-04).
 
 The only module that imports `hindsight_client` (AC-04-1). Everything else talks
 to `Memory`, which adds what the product needs on top of the raw SDK:
@@ -78,7 +78,7 @@ class BankProfile:
 
 def firm_bank(bank_id: str, firm_name: str) -> BankProfile:
     """One bank per firm, so vendor knowledge carries across clients (§4)."""
-    return BankProfile(bank_id, f"Munshi — {firm_name}", FIRM_MISSION.format(firm=firm_name))
+    return BankProfile(bank_id, f"Recon — {firm_name}", FIRM_MISSION.format(firm=firm_name))
 
 
 class RetainRequest(_Value):
@@ -157,7 +157,7 @@ class Recalled:
 
 
 class MemoryBackend(Protocol):
-    """The four calls Munshi makes. Implementations raise `MemoryUnavailableError`."""
+    """The four calls Recon makes. Implementations raise `MemoryUnavailableError`."""
 
     def ensure_bank(self, profile: BankProfile) -> None: ...
     def delete_bank(self, bank_id: str) -> None: ...
@@ -351,7 +351,7 @@ def utc_now() -> datetime:
 
 
 class Memory:
-    """Munshi's memory for one bank, with logging, the offline queue, and caches."""
+    """Recon's memory for one bank, with logging, the offline queue, and caches."""
 
     def __init__(
         self,

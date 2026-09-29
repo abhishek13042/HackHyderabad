@@ -1,4 +1,4 @@
-"""What Munshi writes to and asks of memory, as plain English (SPEC-04 §6 to §8).
+"""What Recon writes to and asks of memory, as plain English (SPEC-04 §6 to §8).
 
 Memories are self-contained sentences: Hindsight extracts facts and links
 entities (vendor, client, GSTIN) from the text itself, so every memory names
@@ -78,12 +78,12 @@ class Resolution:
         ]
         if self.automatic:
             lines.append(
-                f"Munshi resolved it automatically as {self.final_action}, "
+                f"Recon resolved it automatically as {self.final_action}, "
                 "because this pattern had earned trust."
             )
         else:
             suggested = self.suggested_action or "nothing (memory off)"
-            lines.append(f"Munshi suggested {suggested}.")
+            lines.append(f"Recon suggested {suggested}.")
             if self.suggested_action == self.final_action:
                 lines.append("The accountant accepted it.")
             else:

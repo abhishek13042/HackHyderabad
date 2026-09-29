@@ -77,10 +77,10 @@ def table(header: Sequence[str], rows: Sequence[Sequence[Any]]) -> list[str]:
 def markdown(config: dict[str, Any], m: dict[str, Any], curve: list[dict[str, Any]]) -> str:
     conditions, periods = m["conditions"], m["periods"]
     out = [
-        f"# Munshi evaluation — run `{m['run_id']}`",
+        f"# Recon evaluation — run `{m['run_id']}`",
         "",
         "> The data is **synthetic** and its vendor patterns are **planted** (SPEC-02), so",
-        "> these numbers show that the learning loop works, not how Munshi does on a real firm.",
+        "> these numbers show that the learning loop works, not how Recon does on a real firm.",
         "> The last month is held out: the prompt was never tuned against its labels.",
         "",
         f"- Conditions: {', '.join(conditions)} · repeats: {m['repeats']} · dataset seed: "

@@ -1,4 +1,4 @@
-// S4: is Munshi getting better? The eval learning curve, the month's lessons,
+// S4: is Recon getting better? The eval learning curve, the month's lessons,
 // the numbers for the selected month, and every pattern's trust level.
 
 import { useState, type FormEvent } from "react";
@@ -26,7 +26,7 @@ export function Insights() {
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         <Stat label="ITC at risk" value={rupees(stats.itc_at_risk, { paise: false })} />
-        <Stat label="Auto-resolved" value={stats.auto_resolved} hint="Groups Munshi resolved on a trusted pattern" />
+        <Stat label="Auto-resolved" value={stats.auto_resolved} hint="Groups Recon resolved on a trusted pattern" />
         <Stat label="Overrides" value={stats.overrides} hint="Decisions where the accountant chose differently" />
         <Stat label="Drift events" value={stats.drift_events} hint="Vendors whose pattern changed" />
         <Stat label="Cross-client" value={stats.cross_client_warnings} hint="Warnings from what another client saw" />

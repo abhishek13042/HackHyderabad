@@ -44,7 +44,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   try {
     response = await fetch(BASE + path, init);
   } catch {
-    throw new ApiError(0, "NETWORK", "The Munshi server is not reachable. Is it running on port 8000?");
+    throw new ApiError(0, "NETWORK", "The Recon server is not reachable. Is it running on port 8000?");
   }
   const payload: unknown = await response.json().catch(() => null);
   if (!response.ok) {

@@ -4,7 +4,7 @@
 
 ## 1. Purpose
 
-Give Munshi a long-term memory of **what the firm learned** — resolutions,
+Give Recon a long-term memory of **what the firm learned** — resolutions,
 outcomes, vendor behaviour, accountant preferences — using Hindsight's
 retain / recall / reflect. This is the heart of the product and 25% of the
 judging.
@@ -42,7 +42,7 @@ what makes cross-client alerts possible).
 ```python
 create_bank(
   bank_id="munshi-rao-associates",
-  name="Munshi — Rao & Associates",
+  name="Recon — Rao & Associates",
   mission=(
     "You are the institutional memory of Rao & Associates, a Chartered "
     "Accountancy firm in Hyderabad, for GST input-tax-credit reconciliation. "
@@ -60,7 +60,7 @@ High skepticism/literalism: this is tax — prefer evidence over assumption.
 | Hindsight network | Our content |
 |---|---|
 | World (facts) | "Reddy Steels' March invoices are missing from C01's April 2B" |
-| Experience (agent's actions) | "Munshi suggested DEFER; accountant accepted" |
+| Experience (agent's actions) | "Recon suggested DEFER; accountant accepted" |
 | Observation (entity summaries, built by Hindsight) | "Reddy Steels usually files ~1 month late" |
 | Opinion (beliefs with confidence, built by reflect) | "Deferring Reddy Steels is safe — high confidence" → later lowered |
 
@@ -93,7 +93,7 @@ links entities (vendor, client, GSTIN). One memory per **group**, never per invo
 ```
 {Month YYYY}: At client {client_name}, vendor {vendor_name} (GSTIN {gstin})
 had {n} invoice(s) {type_phrase}, ITC at risk ₹{amount}.
-Munshi suggested {suggested_action|"nothing (memory off)"}.
+Recon suggested {suggested_action|"nothing (memory off)"}.
 The accountant {accepted it | overrode it and chose {final_action}}.
 Accountant's note: "{note}".
 ```

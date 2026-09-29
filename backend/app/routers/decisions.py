@@ -22,7 +22,7 @@ router = APIRouter()
 @router.post("/exceptions/{key}/decision")
 def decide(key: str, body: DecisionIn, session: SessionDep) -> DecisionOut:
     """Record (or replace) the decision. An override needs a note: it is the most useful
-    memory Munshi gets."""
+    memory Recon gets."""
     parsed = _checked(session, key, body)
     suggested = session.store.suggested_action(parsed)
     if suggested is not None and body.action is not suggested and not _note(body):

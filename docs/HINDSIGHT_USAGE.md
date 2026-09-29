@@ -1,6 +1,6 @@
-# How Munshi uses Hindsight
+# How Recon uses Hindsight
 
-[Hindsight](https://github.com/vectorize-io/hindsight) is Munshi's long-term memory.
+[Hindsight](https://github.com/vectorize-io/hindsight) is Recon's long-term memory.
 All of it goes through one module,
 [`backend/app/memory.py`](../backend/app/memory.py). It is the only file that
 imports `hindsight_client`, and the only place the four calls below are made.
@@ -20,7 +20,7 @@ The English we write and the questions we ask are in
 ```python
 create_bank(
     "munshi-rao-associates",
-    name="Munshi — Rao & Associates",
+    name="Recon — Rao & Associates",
     mission="You are the institutional memory of Rao & Associates … Never recommend "
     "claiming ITC for an invoice that is absent from GSTR-2B or marked ineligible.",
     disposition_skepticism=4,
@@ -30,7 +30,7 @@ create_bank(
 ```
 
 - **Per firm, not per client.** A vendor's behaviour at one client is evidence at
-  another. That is how Munshi warns C03 about Krishna Logistics, a vendor that never
+  another. That is how Recon warns C03 about Krishna Logistics, a vendor that never
   filed for C01 (D5).
 - **Skeptical and literal**, because this is tax: evidence beats assumption.
 - The ITC rule is also in the mission, but it is *enforced* in code (INV-1 and
@@ -46,7 +46,7 @@ never one per invoice:
 
 | Kind | Written when | Example |
 |---|---|---|
-| **Resolution** (M1) | The accountant decides, or Munshi auto-resolves | How the group was decided, and the accountant's note |
+| **Resolution** (M1) | The accountant decides, or Recon auto-resolves | How the group was decided, and the accountant's note |
 | **Outcome** (M2) | Next month's self-check has a verdict, or a late invoice shows up | Whether that decision turned out right, with the evidence |
 | **Drift** (M3) | A vendor breaks its usual pattern | What changed, and a warning against old assumptions |
 
@@ -55,7 +55,7 @@ Reddy Steels at Sri Balaji Textiles, as the sample data actually retains it:
 ```text
 February 2026: At client Sri Balaji Textiles, vendor Reddy Steels (GSTIN 36AABCR1234F1ZT)
 had 2 invoices missing from GSTR-2B, ITC at risk ₹53,402.04.
-Munshi suggested DEFER.
+Recon suggested DEFER.
 The accountant accepted it.
 Accountant's note: "Jan invoice showed up in Feb 2B. They're just late. Deferring."
 
